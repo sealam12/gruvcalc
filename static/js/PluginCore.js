@@ -1,69 +1,39 @@
-import { AddCommand } from "/static/js/CommandCore.js"
-import { AddModal } from "/static/js/ModalCore.js"
+import { StandardLibrary } from "/static/js/plugins/StandardLibrary.js"
 
-import { ExamplePlugin } from "/static/js/plugins/ExamplePlugin.js"
+let Plugins = [
+    StandardLibrary
+] // List of plugins in the library (Objects)
+let LoadedPlugins = [] // List of currently loaded plugins (Objects)
+let PersistentPluginLoad = [] // List of plugins to be loaded on page load (Objects)
 
-let plugins = [
-    ExamplePlugin
-]
-let loaded_plugins = []
-
-export function FetchLoadedPlugins() { return loaded_plugins; }
-export function FetchPlugins() { return plugins; }
-
-export function RemovePlugin(Plugin) {
-    // TODO: Set plugins to be installed or removed in database
+export function GetPlugin(PluginName) {
+    return Plugins.filter( Plug => Plug.Name == PluginName )[0];
 }
 
-export function LoadPlugin(Plugin) {
-    if (Plugin in loaded_plugins) throw new Error(`Attempted to load already loaded plugin ${Plugin.Name}`);
-    loaded_plugins.push(Plugin)
+export function IsLoaded(PluginName) { return LoadedPlugins.filter( Plug => Plug.Name == PluginName ).length > 0; }
+export function IsPersistentLoaded(PluginName) { return PersistentPluginLoad.filter( Plug => Plug.Name == PluginName ).length > 0; }
 
-    for (const Command of Plugin.Commands) AddCommand(Command);
-    for (const Modal of Plugin.Modals) AddModal(Modal);
-
-    for (const AssignmentName in Plugin.Assignments) {
-        const AssignmentValue = Plugin.Assignments[AssignmentName];
-        window[AssignmentName] = AssignmentValue;
-    }
-
+export function UnloadPlugin(PluginName) {
+    PersistentPluginLoad = PersistentPluginLoad.filter( Plug => Plug.Name != PluginName );
 }
 
-function GetCookie(cookieName) {
-    const name = cookieName + "=";
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const cookieArray = decodedCookie.split(';');
-  
-    for (let i = 0; i < cookieArray.length; i++) {
-        let cookie = cookieArray[i].trimStart();
-        if (cookie.indexOf(name) === 0) {
-            return cookie.substring(name.length, cookie.length);
-        }
-    }
-    return "";
+export function LoadPlugin(PluginName) {
+    const Plugin = GetPlugin(PluginName);
+
+    LoadedPlugins.push(Plugin);
+    Plugin.LoadScript();
+
+
 }
 
 export function PluginSetup() {
-    plugins.forEach(Plugin => {
-        LoadPlugin(Plugin);
-    })
+    window.GetPlugin = GetPlugin;
+    window.IsLoaded = IsLoaded;
+    window.IsPersistentLoaded = IsPersistentLoaded;
+    window.UnloadPlugin = UnloadPlugin;
+    window.LoadPlugin = LoadPlugin;
 
-    fetch("/plugins/", {
-        method: "GET",
-        headers: {
-            'cookie': `csrftoken=${GetCookie("csrftoken")}`
-        }
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    }).then(data => {
-        for (const PluginData of data) {
-            const Plugin = (0, eval)(PluginData)
-            plugins.push(Plugin)
-        }
-    })
-
-    // TODO: Fetch plugins from database
+    for (const Plugin of Plugins) {
+        LoadPlugin(Plugin.Name);
+    }
 }
