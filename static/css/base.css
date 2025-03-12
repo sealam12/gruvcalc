@@ -1,0 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap");
+* { font-family: "Fira Code", monospace; }
+body { background-color: rgb(40, 40, 40); color: rgb(251, 241, 199); font-family: "Fira Code", monospace; display: flex; justify-content: center; align-items: center; max-height: 100vh; margin: 0px; padding: 20vh; }
+.box { background-color: rgb(60, 56, 54); border-radius: 8px; padding: 10px; border: 2px solid rgb(215, 153, 33); overflow-y: auto; height: 100%; box-sizing: border-box; }
+.button { background-color: transparent; font-family: "Fira Code", monospace; color: rgb(251, 241, 199); border: none; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 16px; }
+.button:hover { background-color: rgb(74, 66, 60); }
+.item { padding: 0.8rem; margin-bottom: 10px; background-color: rgb(80, 73, 69); border-radius: 6px; transition: 0.2s; }
+.item.success { border-left: 4px solid rgb(184, 187, 38); }
+.item.none { border-left: 4px solid rgb(168, 153, 132); }
+.item.error { border-left: 4px solid rgb(251, 73, 52); color: rgb(251, 73, 52); }

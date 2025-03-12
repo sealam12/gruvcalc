@@ -1,0 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap");
+#calculator { width: 700px; height: 60vh; background-color: rgb(60, 56, 54); border-radius: 12px; padding: 1rem 2rem 2rem; box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 20px; border: 1px solid rgb(124, 111, 100); display: flex; flex-direction: column; }
+#input { width: 100%; padding: 10px; font-size: 1.2rem; background-color: rgb(60, 56, 54); border-radius: 8px; color: rgb(251, 241, 199); outline: none; margin-bottom: 10px; caret-color: rgb(251, 241, 199); box-sizing: border-box; font-family: "Fira Code", monospace; transition: 0.2s; border: 2px solid rgb(215, 153, 33); }
+#history { background-color: rgb(60, 56, 54); border-radius: 8px; padding: 10px; border: 2px solid rgb(215, 153, 33); overflow-y: auto; height: 100%; box-sizing: border-box; }
+.status-bar { margin-bottom: 15px; color: rgb(168, 153, 132); font-size: 0.9rem; text-align: center; }
+#navbar { display: flex; flex-direction: row; margin-bottom: 10px; background-color: rgb(60, 56, 54); border-radius: 8px; padding: 5px; border: 2px solid rgb(215, 153, 33); max-height: 300px; box-sizing: border-box; }
+.navbar button { overflow: hidden; flex-grow: 1; width: 0px; }
