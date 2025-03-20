@@ -23,7 +23,8 @@ export function LoadPlugin(PluginName) {
     LoadedPlugins.push(Plugin);
     Plugin.LoadScript();
 
-
+    for (const Command of Plugin.Commands) window.AddCommand(Command);
+    for (const Modal of Plugin.Modals) window.AddModal(Modal);
 }
 
 export function PluginSetup() {

@@ -1,5 +1,9 @@
-.modal {
+#modalcontainer {
     display: none;
+}
+
+.modal {
+    display: flex;
     position: fixed;
     top: 0;
     left: 0;
@@ -18,6 +22,9 @@
     height: 80vh;
     color: rgb(251, 241, 199);
     margin: 15px;
+
+    display: flex;
+    flex-direction: column;
 }
 .close-modal {
     background-color: transparent;

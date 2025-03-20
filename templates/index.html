@@ -11,13 +11,15 @@
     <body>
         <div id="calculator">
             <div id="navbar"></div>
-            <input placeholder="Type expression here..." id="input">
-            <div class="item none">Type in expression to view it's output</div>
+            <input placeholder="Type expression here..." id="input" class="input eval">
+            <div id="preview" class="item none">Type an expression to view it's output</div>
             <div id="history"></div>
         </div>
 
-        <div id="modal" class="modal">
-            <div class="modal-content"></div>
+        <div id="modalcontainer">
+            <div id="modal" class="modal">
+                <div class="modal-content"></div>
+            </div>
         </div>
     </body>
 </html>

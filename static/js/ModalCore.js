@@ -1,18 +1,26 @@
 let Modals = [];
 
-export function GetModal() {
+export function AddModal(Modal) {
+    Modals.push(Modal);
+    NavbarSetup();
+}
 
+export function GetModal(ModalName) {
+    for (const Modal of Modals) {
+        if (Modal.Name == ModalName) {
+            return Modal;
+        }
+    }
+
+    return undefined;
 }
 
 export function CloseModal() {
-    $('.modal').fadeOut(100, function() {
-        // Optionally, set the display back to 'none' after the fade-out completes
-        $(this).css('display', 'none');
-    });
+    $('#modalcontainer').hide();
 }
 
 export function OpenModal(ModalObject) {
-    
+    if (typeof(ModalObject) == "string") ModalObject = GetModal(ModalObject);
     const ModalContent = `
     <style>
     #ModalTop {
@@ -27,7 +35,9 @@ export function OpenModal(ModalObject) {
             <p>Modal: ${ModalObject.Title}</p>
             <button class="button" id="CloseModal">Close</button>
         </div>
-        ${ModalObject.Content}
+        <div style="width: 100%; overflow-y: auto;">
+            ${ModalObject.Content}
+        </div>
     </div>
     `
     
@@ -39,21 +49,31 @@ export function OpenModal(ModalObject) {
     
     ModalObject.LoadScript();
     
-    $('.modal').hide().fadeIn(100);
-    $("#modal").css("display", "flex");
+    $('#modalcontainer').show();
+}
+
+export function NavbarSetup() {
+    const Navbar = $("#navbar");
+    for (const Modal of Modals) {
+        if (Modal.NavbarIgnore) continue;
+        const NavbarButton = $("<button></button>");
+        NavbarButton.html(Modal.Title);
+        NavbarButton.addClass("button");
+        NavbarButton.css("width", "0px");
+        NavbarButton.css("flex-grow", "1");
+
+        NavbarButton.click( function() {
+            OpenModal(Modal);
+        } )
+
+        Navbar.append(NavbarButton);
+    }
 }
 
 export function ModalSetup() {
+    window.AddModal = AddModal;
     window.GetModal = GetModal;
     window.CloseModal = CloseModal;
     window.OpenModal = OpenModal;
-
-    OpenModal({
-        Title: "CHEESE",
-        Content: "<p>cheese</p>",
-        LoadScript: function() {},
-    });
-    setTimeout(() => {
-        CloseModal();
-    }, 3000);
+    window.NavbarSetup = NavbarSetup;
 }

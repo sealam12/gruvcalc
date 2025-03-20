@@ -22,9 +22,24 @@
   caret-color: rgb(251, 241, 199);
   box-sizing: border-box;
   font-family: "Fira Code", monospace;
-  transition: 0.2s;
+}
+
+.input.eval {
   border: 2px solid rgb(215, 153, 33);
 }
+
+.input.command {
+  border: 2px solid #458588;
+}
+
+.input.hotkey {
+  border: 2px solid #8ec07c;
+}
+
+.input.error {
+  border: 2px solid #cc241d;
+}
+
 #history {
   background-color: rgb(60, 56, 54);
   border-radius: 8px;
@@ -50,9 +65,4 @@
   border: 2px solid rgb(215, 153, 33);
   max-height: 300px;
   box-sizing: border-box;
-}
-.navbar button {
-  overflow: hidden;
-  flex-grow: 1;
-  width: 0;
 }
