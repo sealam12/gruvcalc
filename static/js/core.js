@@ -9,6 +9,7 @@ let LocalConfig = {
 
 export function IsBlank() {
     if (LocalConfig.Mode == "command") return Input.val() == " > ";
+    if (LocalConfig.Mode == "hotkey") return Input.val() == " @ ";
     return Input.val().length == 0;
 }
 
@@ -34,14 +35,28 @@ export function Reset() {
 
 export function TextPreviewEvaluation() {
     if (LocalConfig.Mode == "eval") {
-
+        try {
+            const Result = (0,eval)(Input.val());
+            $("#preview").html(Result);
+            $("#preview").attr("class", `item success`);
+        } catch (e) {
+            $("#preview").html(e.toString());
+            $("#preview").attr("class", `item error`);
+        }
     } else if (LocalConfig.Mode == "command") {
         const Command = SplitCommand(Input.val());
         const Result = EvaluateCommandPreview(Command);
         $("#preview").html(Result.Result);
         $("#preview").attr("class", `item ${Result.Status}`);
     } else if (LocalConfig.Mode == "hotkey") {
-
+        try {
+            const Result = (0,eval)(Input.val().slice(3));
+            $("#preview").html(Result);
+            $("#preview").attr("class", `item success`);
+        } catch (e) {
+            $("#preview").html(e.toString());
+            $("#preview").attr("class", `item error`);
+        }
     }
 }
 
@@ -86,6 +101,12 @@ export function InputKeypress(Event) {
             SetMode("command");
             Input.val(" > ");
         }
+        if (Key == "@" && IsBlank()) {
+            Event.preventDefault();
+            Reset();
+            SetMode("hotkey");
+            Input.val(" @ ");
+        }
     } else if (LocalConfig.Mode == "command") {
         if (Key == "Backspace" && IsBlank()) {
             Reset();
@@ -94,7 +115,36 @@ export function InputKeypress(Event) {
             TextEvaluation();
         }
     } else if (LocalConfig.Mode == "hotkey") {
+        if (Key == "Backspace" && IsBlank()) {
+            Reset();
+        }
 
+        function ReplaceChar(Char) {
+            Event.preventDefault();
+            const SplitIndex = Input.get(0).selectionStart;
+            const FirstSplit = Input.val().slice(0,SplitIndex);
+            const SecondSplit = Input.val().slice(SplitIndex);
+            const Result = `${FirstSplit}${Char}${SecondSplit}`;
+
+            Input.val(Result);
+        }
+
+        switch (Key) {
+            case "p":
+                ReplaceChar("+");
+                break;
+            case "o":
+                ReplaceChar("-");
+                break;
+            case "i":
+                ReplaceChar("*");
+                break;
+            case "u":
+                ReplaceChar("/");
+                break;
+            default:
+                break;
+        }
     }
 
     setTimeout(TextPreviewEvaluation, 1);
