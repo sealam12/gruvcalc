@@ -36,6 +36,15 @@ export function Reset() {
 export function TextPreviewEvaluation() {
     if (LocalConfig.Mode == "eval") {
         try {
+            const Val = Input.val();
+            const Regex = new RegExp('[a-zA-Z]+\\(.+\\)');
+
+            if (Regex.exec(Val) && Regex.exec(Val).length > 0) {
+                $("#preview").html("Operation will be executed on enter");
+                $("#preview").attr("class", `item none`);
+                return
+            }
+
             const Result = (0,eval)(Input.val());
             $("#preview").html(Result);
             $("#preview").attr("class", `item success`);
@@ -62,7 +71,21 @@ export function TextPreviewEvaluation() {
 
 export function TextEvaluation() {
     if (LocalConfig.Mode == "eval") {
+        let Status = "success";
+        let Result;
+        try {
+            Result = (0,eval)(Input.val());
+            Status = "success";
+        } catch (e) {
+            Result = e.toString();
+            Status = "error";
+        }
+        const NewItem = $("<div></div>");
 
+        NewItem.html(Result);
+        NewItem.attr("class", `item ${Status}`);
+
+        $("#history").prepend(NewItem);
     } else if (LocalConfig.Mode == "command") {
         const Command = SplitCommand(Input.val());
         const Result = EvaluateCommand(Command);
@@ -94,6 +117,10 @@ export function InputKeypress(Event) {
         Input.val(" > ");
     }
 
+    if (Key == "Enter") {
+        TextEvaluation();
+    }
+
     if (LocalConfig.Mode == "eval") {
         if (Key == ">" && IsBlank()) {
             Event.preventDefault();
@@ -110,9 +137,6 @@ export function InputKeypress(Event) {
     } else if (LocalConfig.Mode == "command") {
         if (Key == "Backspace" && IsBlank()) {
             Reset();
-        }
-        if (Key == "Enter") {
-            TextEvaluation();
         }
     } else if (LocalConfig.Mode == "hotkey") {
         if (Key == "Backspace" && IsBlank()) {

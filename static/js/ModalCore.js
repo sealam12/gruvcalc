@@ -23,11 +23,11 @@ export function OpenModal(ModalObject) {
     if (typeof(ModalObject) == "string") ModalObject = GetModal(ModalObject);
     const ModalContent = `
     <style>
-    #ModalTop {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
+        #ModalTop {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
         }
     </style>
     <div class="modal-content">

@@ -15,10 +15,19 @@ export function IsPersistentLoaded(PluginName) { return PersistentPluginLoad.fil
 
 export function UnloadPlugin(PluginName) {
     PersistentPluginLoad = PersistentPluginLoad.filter( Plug => Plug.Name != PluginName );
+    localStorage.setItem("PersistentPluginLoad", JSON.stringify(PersistentPluginLoad));
 }
 
 export function LoadPlugin(PluginName) {
     const Plugin = GetPlugin(PluginName);
+
+    if (!IsPersistentLoaded(PluginName)) {
+        PersistentPluginLoad.push(GetPlugin(PluginName));
+        localStorage.setItem("PersistentPluginLoad", JSON.stringify(PersistentPluginLoad));
+    }
+    if (IsLoaded(PluginName)) {
+        return;
+    }
 
     LoadedPlugins.push(Plugin);
     Plugin.LoadScript();
@@ -33,6 +42,9 @@ export function PluginSetup() {
     window.IsPersistentLoaded = IsPersistentLoaded;
     window.UnloadPlugin = UnloadPlugin;
     window.LoadPlugin = LoadPlugin;
+
+    const PersLoaded = JSON.parse(localStorage.getItem("PersistentPluginLoad"));
+    PersistentPluginLoad.push("StandardLibrary");
 
     for (const Plugin of Plugins) {
         LoadPlugin(Plugin.Name);
