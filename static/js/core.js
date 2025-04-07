@@ -37,7 +37,7 @@ export function TextPreviewEvaluation() {
     if (LocalConfig.Mode == "eval") {
         try {
             const Val = Input.val();
-            const Regex = new RegExp('[a-zA-Z]+\\(.+\\)');
+            const Regex = new RegExp('[a-z].+\\(.*\\)');
 
             if (Regex.exec(Val) && Regex.exec(Val).length > 0) {
                 $("#preview").html("Operation will be executed on enter");
