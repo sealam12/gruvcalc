@@ -44,9 +44,8 @@ export function PluginSetup() {
     window.LoadPlugin = LoadPlugin;
 
     const PersLoaded = JSON.parse(localStorage.getItem("PersistentPluginLoad"));
-    PersistentPluginLoad.push("StandardLibrary");
 
-    for (const Plugin of Plugins) {
+    for (const Plugin of PersLoaded) {
         LoadPlugin(Plugin.Name);
     }
 }

@@ -82,7 +82,7 @@ export function TextEvaluation() {
         }
         const NewItem = $("<div></div>");
 
-        NewItem.html(Result);
+        NewItem.html(`${Input.val()} = ${Result}`);
         NewItem.attr("class", `item ${Status}`);
 
         $("#history").prepend(NewItem);
@@ -91,7 +91,14 @@ export function TextEvaluation() {
         const Result = EvaluateCommand(Command);
         const NewItem = $("<div></div>");
 
-        NewItem.html(Result.Result);
+        let ResultText;
+        if (Result.Result == null) {
+            ResultText = "Command did not return an output.";
+        } else {
+            ResultText = Result.Result;
+        }
+
+        NewItem.html(`${Input.val()} | ${ResultText}`);
         NewItem.attr("class", `item ${Result.Status}`)
 
         $("#history").prepend(NewItem);
