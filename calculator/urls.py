@@ -19,5 +19,7 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('', views.calculator)
+    path('', views.calculator),
+    path('plugins/', views.plugins_index),
+    path('plugins/<int:id>/', views.plugin_fetch)
 ]
