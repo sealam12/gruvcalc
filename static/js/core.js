@@ -6,6 +6,7 @@ const Input = $("#input");
 let LocalConfig = {
     Mode: "eval",
 };
+let PreviousResult;
 
 export function IsBlank() {
     if (LocalConfig.Mode == "command") return Input.val() == " > ";
@@ -86,6 +87,7 @@ export function TextEvaluation() {
         NewItem.html(`${Input.val()} = ${Result}`);
         NewItem.attr("class", `item ${Status}`);
 
+        PreviousResult = Result;
         $("#history").prepend(NewItem);
     } else if (LocalConfig.Mode == "command") {
         const Command = SplitCommand(Input.val());
@@ -102,6 +104,9 @@ export function TextEvaluation() {
         NewItem.html(`${Input.val()} | ${ResultText}`);
         NewItem.attr("class", `item ${Result.Status}`)
 
+        if (Result.Status != "error") {
+            PreviousResult = Result;
+        }
         $("#history").prepend(NewItem);
     } else if (LocalConfig.Mode == "hotkey") {
         const NewItem = $("<div></div>");
@@ -109,6 +114,7 @@ export function TextEvaluation() {
             const Result = (0,eval)(Input.val().slice(3));
             NewItem.html(Result);
             NewItem.attr("class", `item success`);
+            PreviousResult = Result;
         } catch (e) {
             NewItem.html(e.toString());
             NewItem.attr("class", `item error`);
@@ -116,10 +122,27 @@ export function TextEvaluation() {
         $("#history").prepend(NewItem);
     }
 
-    Reset();
+    if (LocalConfig.Mode != "hotkey") {
+        Reset();
+    } else {
+        Reset();
+        SetMode("hotkey");
+        Input.val(" @ ");
+    }
 }
 
+
 export function InputKeypress(Event) {
+    function ReplaceChar(Char) {
+        Event.preventDefault();
+        const SplitIndex = Input.get(0).selectionStart;
+        const FirstSplit = Input.val().slice(0,SplitIndex);
+        const SecondSplit = Input.val().slice(SplitIndex);
+        const Result = `${FirstSplit}${Char}${SecondSplit}`;
+    
+        Input.val(Result);
+    }
+
     const Key = Event.key;
 
     if (Key == "Escape") {
@@ -166,16 +189,6 @@ export function InputKeypress(Event) {
             Reset();
         }
 
-        function ReplaceChar(Char) {
-            Event.preventDefault();
-            const SplitIndex = Input.get(0).selectionStart;
-            const FirstSplit = Input.val().slice(0,SplitIndex);
-            const SecondSplit = Input.val().slice(SplitIndex);
-            const Result = `${FirstSplit}${Char}${SecondSplit}`;
-
-            Input.val(Result);
-        }
-
         switch (Key) {
             case "p":
                 ReplaceChar("+");
@@ -188,6 +201,9 @@ export function InputKeypress(Event) {
                 break;
             case "u":
                 ReplaceChar("/");
+                break;
+            case "`":
+                ReplaceChar(PreviousResult);
                 break;
             default:
                 break;
