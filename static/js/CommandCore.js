@@ -1,4 +1,5 @@
 let Commands = [];
+const Autocomplete = $("#cmd-suggestion");
 
 export function AddCommand(Command) {
     Commands.push(Command);
@@ -14,8 +15,32 @@ export function GetCommand(Name) {
     return undefined;
 }
 
+export function AutocompleteSuggestion(CommandName) {
+    const Lower = CommandName.toLowerCase();
+        
+    // Filter the commands that start with the input string
+    const Suggestions = Commands.filter(Command => 
+        Command.Name.toLowerCase().startsWith(Lower)
+    );
+
+    Autocomplete.html("");
+    
+    for (const Suggestion of Suggestions) {
+        const NewElement = $("<div></div>");
+        NewElement.html(Suggestion.Name);
+        NewElement.css("margin-right", "5px")
+        NewElement.addClass("button");
+        Autocomplete.append(NewElement);
+    }
+
+    window.FirstAutocomplete = Suggestions[0];
+} 
+
 export function EvaluateCommandPreview(Text) {
     const CommandName = Text.split(" ")[0];
+
+    AutocompleteSuggestion(CommandName);
+
     const Command = GetCommand(CommandName);
     if (!Command) {
         return {
@@ -57,6 +82,7 @@ export function EvaluateCommand(Text) {
 export function CommandSetup() {
     window.AddCommand = AddCommand;
     window.GetCommand = GetCommand;
+    window.AutocompleteSuggestion = AutocompleteSuggestion;
     window.EvaluateCommandPreview = EvaluateCommandPreview;
     window.EvaluateCommand = EvaluateCommand;
 }

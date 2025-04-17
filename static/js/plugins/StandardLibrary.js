@@ -7,7 +7,7 @@ export const StandardLibrary = {
             Name: "help",
             Title: "Help",
             Content: `<h1>GruvCalc Documentation</h1>
-<h2>Overview</h2>
+<h3>Overview</h3>
 <p>GruvCalc is a powerful, multimodal calculator application that allows users to perform various calculations and extend its functionality through plugins. This documentation provides an overview of its features and how to use them.</p>
 
 <h3>Calculator Information</h3>
@@ -31,22 +31,51 @@ export const StandardLibrary = {
 
 <h3>Command System</h3>
 <p>GruvCalc supports a command system that allows users to execute commands. You activate command mode by either using the \ keybind or entering > into the input field. Follow the > symbol with a command, and press [Enter] to execute it.</p>
-<p>The standard library comes with the following commands:</p>
-<ul>
-    <li><strong>help</strong>: Opens the Help modal (This modal)</li>
-</ul>
 
 <h3>Plugins</h3>
 <p>The functionality of GruvCalc can be extended by using Plugins. Plugins are packages created by GruvCalc and other users, designed to help expand GruvCalc where niche cases are present without bloating other users who don't need a certain functionality.</p>
-<p>Plugins can be installed through the "Plugins" modal</p>`,
+<p>Plugins can be installed through the "Plugins" modal. Because of the way the plugin framework is stuctured, you must reload the page after you remove a plugin for changes to take place.</p>`,
             LoadScript: function() {},
-        }
+        },
+        
+        {
+            Name: "plugins",
+            Title: "Plugins",
+            Content: `<h1>GruvCalc Plugins Library</h1>
+<p>When uninstalling a plugin, changes will be applied after the page reloads.</p>
+<button class="button" style="width: 100%; margin-bottom:10px;" id="STANDARD_LIB:PLUGINS:REFRESH_LISTING">Refresh</button>
+<div class="box" style="height: 300px;" id="STANDARD_LIB:PLUGINS:LISTING">
+</div>`,
+            LoadScript: function() {
+
+            },
+        },
     ],
     Commands: [
         {
             Name: "help",
             Preview: Args => "Shows the help modal.",
-            Evaluate: function(Args) {window.OpenModal("help"); return "Help modal opened.";}
+            Evaluate: function(Args) { window.OpenModal("help"); return "Help modal opened."; }
+        },
+        {
+            Name: "modal",
+            Preview: Args => "Opens the designated modal.",
+            Evaluate: function(Args) { try { window.OpenModal(Args[0]); return "Modal opened."; } catch { throw new Error("Could not find designated modal."); } }
+        },
+        {
+            Name: "mdl",
+            Preview: Args => "Shorthand for the 'mdl' command",
+            Evaluate: function(Args) { try { window.OpenModal(Args[0]); return "Modal opened."; } catch { throw new Error("Could not find designated modal."); } }
+        },
+        {
+            Name: "clear",
+            Preview: Args => "Clears the history",
+            Evaluate: function(Args) {
+                setTimeout(function() {
+                    $("#history").html("");
+                }, 1)
+                return "History cleared.";
+            }
         }
     ],
     Assignments: {},

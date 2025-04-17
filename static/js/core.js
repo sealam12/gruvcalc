@@ -34,10 +34,11 @@ export function Reset() {
 }
 
 export function TextPreviewEvaluation() {
+    $("#cmd-suggestion").html("");
     if (LocalConfig.Mode == "eval") {
         try {
             const Val = Input.val();
-            const Regex = new RegExp('[a-z].+\\(.*\\)');
+            const Regex = new RegExp('[a-z][a-zA-Z1-9]+\\(.*\\)');
 
             if (Regex.exec(Val) && Regex.exec(Val).length > 0) {
                 $("#preview").html("Operation will be executed on enter");
@@ -103,7 +104,16 @@ export function TextEvaluation() {
 
         $("#history").prepend(NewItem);
     } else if (LocalConfig.Mode == "hotkey") {
-
+        const NewItem = $("<div></div>");
+        try {
+            const Result = (0,eval)(Input.val().slice(3));
+            NewItem.html(Result);
+            NewItem.attr("class", `item success`);
+        } catch (e) {
+            NewItem.html(e.toString());
+            NewItem.attr("class", `item error`);
+        }
+        $("#history").prepend(NewItem);
     }
 
     Reset();
@@ -144,6 +154,12 @@ export function InputKeypress(Event) {
     } else if (LocalConfig.Mode == "command") {
         if (Key == "Backspace" && IsBlank()) {
             Reset();
+        } else if (Key == "Tab") {
+            if (window.FirstAutocomplete) {
+                Event.preventDefault();
+                Input.val(` > ${window.FirstAutocomplete.Name} `);
+                TextPreviewEvaluation();
+            }
         }
     } else if (LocalConfig.Mode == "hotkey") {
         if (Key == "Backspace" && IsBlank()) {

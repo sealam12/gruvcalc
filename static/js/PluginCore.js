@@ -22,7 +22,7 @@ export function LoadPlugin(PluginName) {
     const Plugin = GetPlugin(PluginName);
 
     if (!IsPersistentLoaded(PluginName)) {
-        PersistentPluginLoad.push(GetPlugin(PluginName));
+        PersistentPluginLoad.push(Plugin);
         localStorage.setItem("PersistentPluginLoad", JSON.stringify(PersistentPluginLoad));
     }
     if (IsLoaded(PluginName)) {

@@ -5,6 +5,10 @@ export function AddModal(Modal) {
     NavbarSetup();
 }
 
+export function GetModals() {
+    return Modals;
+}
+
 export function GetModal(ModalName) {
     for (const Modal of Modals) {
         if (Modal.Name == ModalName) {
@@ -54,6 +58,7 @@ export function OpenModal(ModalObject) {
 
 export function NavbarSetup() {
     const Navbar = $("#navbar");
+    Navbar.html("");
     for (const Modal of Modals) {
         if (Modal.NavbarIgnore) continue;
         const NavbarButton = $("<button></button>");
@@ -72,6 +77,7 @@ export function NavbarSetup() {
 
 export function ModalSetup() {
     window.AddModal = AddModal;
+    window.GetModals = GetModals;
     window.GetModal = GetModal;
     window.CloseModal = CloseModal;
     window.OpenModal = OpenModal;
