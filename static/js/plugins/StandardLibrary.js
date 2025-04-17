@@ -54,9 +54,14 @@ export const StandardLibrary = {
     Commands: [
         {
             Name: "help",
-            Preview: Args => "Shows the help modal.",
+            Preview: Args => "Opens the help modal.",
             Evaluate: function(Args) { window.OpenModal("help"); return "Help modal opened."; }
         },
+        {
+            Name: "plguins",
+            Preview: Args => "Opens teh plugins modal.",
+            Evaluate: function(Args) { window.OpenModal("plugins"); return "Plugins modal opened"; }
+        }
         {
             Name: "modal",
             Preview: Args => "Opens the designated modal.",
