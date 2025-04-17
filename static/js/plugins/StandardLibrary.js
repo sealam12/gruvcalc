@@ -58,18 +58,24 @@ export const StandardLibrary = {
             Evaluate: function(Args) { window.OpenModal("help"); return "Help modal opened."; }
         },
         {
-            Name: "plguins",
+            Name: "plugins",
             Preview: Args => "Opens teh plugins modal.",
             Evaluate: function(Args) { window.OpenModal("plugins"); return "Plugins modal opened"; }
-        }
+        },
         {
             Name: "modal",
-            Preview: Args => "Opens the designated modal.",
+            Preview: function(Args) {
+                try { return `Opening modal ${window.GetModal(Args[0]).Title}`; }
+                catch { return "Opens the designated modal."; }
+            },
             Evaluate: function(Args) { try { window.OpenModal(Args[0]); return "Modal opened."; } catch { throw new Error("Could not find designated modal."); } }
         },
         {
             Name: "mdl",
-            Preview: Args => "Shorthand for the 'mdl' command",
+            Preview: function(Args) {
+                try { return `Opening modal ${window.GetModal(Args[0]).Title}`; }
+                catch { return "Opens the designated modal."; }
+            },
             Evaluate: function(Args) { try { window.OpenModal(Args[0]); return "Modal opened."; } catch { throw new Error("Could not find designated modal."); } }
         },
         {
