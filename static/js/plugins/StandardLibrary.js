@@ -12,7 +12,7 @@ export const StandardLibrary = {
 
 <h3>Calculator Information</h3>
 <ul>
-    <li><strong>Input Field</strong>: Users can type expressions directly into the input field.</li>
+    <li><strong>Input Field</strong>: Type expressions directly into the input field.</li>
     <li><strong>Preview Area</strong>: Displays the output of the expression being typed.</li>
     <li><strong>History</strong>: Keeps track of previous calculations.</li>
 </ul>
@@ -33,7 +33,7 @@ export const StandardLibrary = {
 <p>GruvCalc supports a command system that allows users to execute commands. You activate command mode by either using the \ keybind or entering > into the input field. Follow the > symbol with a command, and press [Enter] to execute it.</p>
 
 <h3>Plugins</h3>
-<p>The functionality of GruvCalc can be extended by using Plugins. Plugins are packages created by GruvCalc and other users, designed to help expand GruvCalc where niche cases are present without bloating other users who don't need a certain functionality.</p>
+<p>The functionality of GruvCalc can be extended by using Plugins. Plugins are packages created by GruvCalc and other users, designed to expand GruvCalc helpful ways by extending the standard functionality.</p>
 <p>Plugins can be installed through the "Plugins" modal. Because of the way the plugin framework is stuctured, you must reload the page after you remove a plugin for changes to take place.</p>`,
             LoadScript: function() {},
         },
