@@ -20,7 +20,7 @@ export function AutocompleteSuggestion(CommandName) {
         
     // Filter the commands that start with the input string
     const Suggestions = Commands.filter(Command => 
-        Command.Name.toLowerCase().startsWith(Lower)
+        Command.Name.toLowerCase().startsWith(Lower) && !Command.ExcludeAutocomplete
     );
 
     Autocomplete.html("");

@@ -6,3 +6,6 @@ class Plugin(models.Model):
     description = models.CharField(max_length=1000)
     
     content = models.TextField()
+
+    def __str__(self):
+        return self.content

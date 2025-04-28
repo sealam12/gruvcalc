@@ -1,6 +1,7 @@
 import { PluginSetup } from "/static/js/PluginCore.js";
 import { CommandSetup, EvaluateCommandPreview, EvaluateCommand } from "/static/js/CommandCore.js";
 import { ModalSetup } from "/static/js/ModalCore.js";
+import { FatalError } from "/static/js/ErrorCore.js";
 
 const Input = $("#input");
 let LocalConfig = {
@@ -233,4 +234,8 @@ export function Setup() {
     Input.keydown(InputKeypress);
 }
 
-Setup()
+try {
+    Setup();
+} catch(E) {
+    throw new FatalError(E.toString(), E.stack);
+}

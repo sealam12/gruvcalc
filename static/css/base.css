@@ -26,6 +26,14 @@ body {
   height: 100%;
   box-sizing: border-box;
 }
+.box-unsized {
+  background-color: rgb(60, 56, 54);
+  border-radius: 8px;
+  padding: 10px;
+  border: 2px solid rgb(215, 153, 33);
+  overflow-y: auto;
+  box-sizing: border-box;
+}
 .hr {
   width: 100%;
   border: 0.5px solid #58524f;

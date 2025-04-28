@@ -87,6 +87,12 @@ export const StandardLibrary = {
                 }, 1)
                 return "History cleared.";
             }
+        },
+        {
+            Name: "admin",
+            Preview: Args => "Redirects to the admin page.",
+            Evaluate: Args => window.location.href = "/admin/",
+            ExcludeAutocomplete: true
         }
     ],
     Assignments: {},
