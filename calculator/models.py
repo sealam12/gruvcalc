@@ -8,4 +8,4 @@ class Plugin(models.Model):
     content = models.TextField()
 
     def __str__(self):
-        return self.content
+        return self.name

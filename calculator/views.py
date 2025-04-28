@@ -12,13 +12,7 @@ def plugins_index(request):
     plugins_list = []
     
     for plugin in all_plugins:
-        plugin = {
-            "Name": plugin.name,
-            "Description": plugin.description,
-            "Content": plugin.content,
-        }
-        
-        plugins_list.append(plugin)
+        plugins_list.append(plugin.name)
         
     return JsonResponse(plugins_list, safe=False)
 
