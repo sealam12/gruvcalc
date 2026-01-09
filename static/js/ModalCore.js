@@ -1,24 +1,3 @@
-let Modals = [];
-
-export function AddModal(Modal) {
-    Modals.push(Modal);
-    NavbarSetup();
-}
-
-export function GetModals() {
-    return Modals;
-}
-
-export function GetModal(ModalName) {
-    for (const Modal of Modals) {
-        if (Modal.Name == ModalName) {
-            return Modal;
-        }
-    }
-
-    return undefined;
-}
-
 export function CloseModal() {
     $('#modalcontainer').hide();
 }
@@ -73,13 +52,4 @@ export function NavbarSetup() {
 
         Navbar.append(NavbarButton);
     }
-}
-
-export function ModalSetup() {
-    window.AddModal = AddModal;
-    window.GetModals = GetModals;
-    window.GetModal = GetModal;
-    window.CloseModal = CloseModal;
-    window.OpenModal = OpenModal;
-    window.NavbarSetup = NavbarSetup;
 }

@@ -1,6 +1,6 @@
-export const StandardLibrary = {
-    Name: "StandardLibrary",
-    Description: "GruvCalc Standard Library",
+export const CorePlugin = {
+    Name: "CorePlugin",
+    Description: "GruvCalc Core Plugin",
 
     Modals: [
         {
@@ -43,8 +43,8 @@ export const StandardLibrary = {
             Title: "Plugins",
             Content: `<h1>GruvCalc Plugins Library</h1>
 <p>When uninstalling a plugin, changes will be applied after the page reloads.</p>
-<button class="button" style="width: 100%; margin-bottom:10px;" id="STANDARD_LIB:PLUGINS:REFRESH_LISTING">Refresh</button>
-<div class="box" style="height: 300px;" id="STANDARD_LIB:PLUGINS:LISTING">
+<button class="button" style="width: 100%; margin-bottom:10px;" id="CORE_PLUGIN:PLUGINS:REFRESH_LISTING">Refresh</button>
+<div class="box" style="height: 300px;" id="CORE_PLUGIN:PLUGINS:LISTING">
 </div>`,
             LoadScript: function() {
 
@@ -59,7 +59,7 @@ export const StandardLibrary = {
         },
         {
             Name: "plugins",
-            Preview: Args => "Opens teh plugins modal.",
+            Preview: Args => "Opens the plugins modal.",
             Evaluate: function(Args) { window.OpenModal("plugins"); return "Plugins modal opened"; }
         },
         {

@@ -1,6 +1,3 @@
-import { PluginSetup } from "/static/js/PluginCore.js";
-import { CommandSetup, EvaluateCommandPreview, EvaluateCommand } from "/static/js/CommandCore.js";
-import { ModalSetup } from "/static/js/ModalCore.js";
 import { FatalError } from "/static/js/ErrorCore.js";
 
 const Input = $("#input");
@@ -40,10 +37,17 @@ export function TextPreviewEvaluation() {
     if (LocalConfig.Mode == "eval") {
         try {
             const Val = Input.val();
-            const Regex = new RegExp('[a-z][a-zA-Z1-9]+\\(.*\\)');
+            const CallRegex = new RegExp('[a-z][a-zA-Z0-9]+\\(.*\\)');
 
-            if (Regex.exec(Val) && Regex.exec(Val).length > 0) {
+            if (CallRegex.exec(Val) && CallRegex.exec(Val).length > 0) {
                 $("#preview").html("Operation will be executed on enter");
+                $("#preview").attr("class", `item none`);
+                return
+            }
+
+            const AssignRegex = new RegExp('[a-zA-Z0-9]+ *\\= *[a-zA-Z0-9]*');
+            if (AssignRegex.exec(Val) && AssignRegex.exec(Val).length > 0) {
+                $("#preview").html("Assignment will be executed on enter");
                 $("#preview").attr("class", `item none`);
                 return
             }
@@ -56,10 +60,11 @@ export function TextPreviewEvaluation() {
             $("#preview").attr("class", `item error`);
         }
     } else if (LocalConfig.Mode == "command") {
+        /*
         const Command = SplitCommand(Input.val());
         const Result = EvaluateCommandPreview(Command);
         $("#preview").html(Result.Result);
-        $("#preview").attr("class", `item ${Result.Status}`);
+        $("#preview").attr("class", `item ${Result.Status}`);*/
     } else if (LocalConfig.Mode == "hotkey") {
         try {
             const Result = (0,eval)(Input.val().slice(3));
@@ -91,7 +96,7 @@ export function TextEvaluation() {
         PreviousResult = Result;
         $("#history").prepend(NewItem);
     } else if (LocalConfig.Mode == "command") {
-        const Command = SplitCommand(Input.val());
+        /*const Command = SplitCommand(Input.val());
         const Result = EvaluateCommand(Command);
         const NewItem = $("<div></div>");
 
@@ -108,7 +113,7 @@ export function TextEvaluation() {
         if (Result.Status != "error") {
             PreviousResult = Result;
         }
-        $("#history").prepend(NewItem);
+        $("#history").prepend(NewItem);*/
     } else if (LocalConfig.Mode == "hotkey") {
         const NewItem = $("<div></div>");
         try {
@@ -176,6 +181,7 @@ export function InputKeypress(Event) {
             Input.val(" @ ");
         }
     } else if (LocalConfig.Mode == "command") {
+        /*
         if (Key == "Backspace" && IsBlank()) {
             Reset();
         } else if (Key == "Tab") {
@@ -184,7 +190,7 @@ export function InputKeypress(Event) {
                 Input.val(` > ${window.FirstAutocomplete.Name} `);
                 TextPreviewEvaluation();
             }
-        }
+        }*/
     } else if (LocalConfig.Mode == "hotkey") {
         if (Key == "Backspace" && IsBlank()) {
             Reset();
@@ -194,13 +200,13 @@ export function InputKeypress(Event) {
             case "p":
                 ReplaceChar("+");
                 break;
-            case "o":
+            case "m":
                 ReplaceChar("-");
                 break;
-            case "i":
+            case "t":
                 ReplaceChar("*");
                 break;
-            case "u":
+            case "d":
                 ReplaceChar("/");
                 break;
             case "`":

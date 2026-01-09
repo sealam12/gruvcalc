@@ -1,19 +1,4 @@
-let Commands = [];
 const Autocomplete = $("#cmd-suggestion");
-
-export function AddCommand(Command) {
-    Commands.push(Command);
-}
-
-export function GetCommand(Name) {
-    for (const Command of Commands) { 
-        if (Command.Name == Name) {
-            return Command;
-        }
-    }
-
-    return undefined;
-}
 
 export function AutocompleteSuggestion(CommandName) {
     const Lower = CommandName.toLowerCase();
@@ -77,12 +62,4 @@ export function EvaluateCommand(Text) {
             Result: e.toString()
         };
     }
-}
-
-export function CommandSetup() {
-    window.AddCommand = AddCommand;
-    window.GetCommand = GetCommand;
-    window.AutocompleteSuggestion = AutocompleteSuggestion;
-    window.EvaluateCommandPreview = EvaluateCommandPreview;
-    window.EvaluateCommand = EvaluateCommand;
 }
