@@ -1,0 +1,114 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap");
+
+.eval {
+  border: 2px solid #d79921;
+}
+
+.command {
+  border: 2px solid #458588;
+}
+
+.hotkey {
+  border: 2px solid #8ec07c;
+}
+
+.error {
+  border: 2px solid #cc241d;
+}
+
+#calculator {
+  width: 700px;
+  height: 60vh;
+  background-color: rgb(60, 56, 54);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 20px;
+  border: 1px solid rgb(124, 111, 100);
+  display: flex;
+  flex-direction: column;
+}
+#input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1.2rem;
+  background-color: rgb(60, 56, 54);
+  border-radius: 8px;
+  color: rgb(251, 241, 199);
+  outline: none;
+  caret-color: rgb(251, 241, 199);
+  box-sizing: border-box;
+  font-family: "Fira Code", monospace;
+}
+#cmd-suggestion {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+#input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 5px;
+}
+
+#prefix {
+  padding: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-size: 1.2rem;
+  background-color: rgb(60, 56, 54);
+  border-radius: 8px;
+  color: rgb(251, 241, 199);
+  outline: none;
+  caret-color: rgb(251, 241, 199);
+  box-sizing: border-box;
+  font-family: "Fira Code", monospace;
+}
+
+#prefix.eval {
+  padding: 0px;
+  margin: 0px;
+}
+
+#prefix.command, #prefix.hotkey {
+  padding: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-size: 1.2rem;
+  background-color: rgb(60, 56, 54);
+  border-radius: 8px;
+  color: rgb(251, 241, 199);
+  outline: none;
+  caret-color: rgb(251, 241, 199);
+  box-sizing: border-box;
+  font-family: "Fira Code", monospace;
+}
+
+#history {
+  background-color: rgb(60, 56, 54);
+  border-radius: 8px;
+  padding: 10px;
+  border: 2px solid rgb(215, 153, 33);
+  overflow-y: auto;
+  height: 100%;
+  box-sizing: border-box;
+}
+.status-bar {
+  margin-bottom: 15px;
+  color: rgb(168, 153, 132);
+  font-size: 0.9rem;
+  text-align: center;
+}
+#navbar {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+  background-color: rgb(60, 56, 54);
+  border-radius: 8px;
+  padding: 5px;
+  border: 2px solid rgb(215, 153, 33);
+  max-height: 300px;
+  box-sizing: border-box;
+  gap: 5px;
+}
