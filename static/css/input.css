@@ -1,4 +1,6 @@
 #input-container {
+    --INPUT-accent: var(--color-primary);
+    
     display: flex;
     flex-direction: row;
 
@@ -7,6 +9,12 @@
 
 #input-box, #input-prefix {
     font-size: 1.2rem;
+
+    background-color: var(--color-bg1);
+
+    outline: none;
+    border-radius: 8px;
+    border: 2px solid var(--INPUT-accent);
 }
 
 #input-box {
@@ -14,13 +22,6 @@
     padding: 10px;
 
     box-sizing: border-box;
-
-    color: rgb(251, 241, 199);
-    background-color: var(--color-grey);
-
-    outline: none;
-    border-radius: 8px;
-    border: 2px solid var(--color-light-grey);
     
     caret-color: rgb(251, 241, 199);
 }
@@ -30,12 +31,8 @@
     padding-left: 15px;
     padding-right: 15px;
 
+    color: var(--INPUT-accent);
+    font-weight: bolder;
+
     box-sizing: border-box;
-
-    color: rgb(251, 241, 199);
-    background-color: var(--color-grey);
-
-    outline: none;
-    border-radius: 8px;
-    border: 2px solid var(--color-light-grey);
 }

@@ -1,0 +1,32 @@
+#navbar-container {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    caret-color: rgb(251, 241, 199);
+}
+
+.navbar-button {
+    background-color: var(--color-bg2);
+    border: none;
+    color: var(--color-fg);
+
+    flex-grow: 1;
+    flex: 1;
+    width: 100%;
+
+    outline: none;
+    border-radius: 8px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    border: 2px solid rgba(0,0,0,0);
+}
+
+.navbar-button:hover {
+    background-color: rgb(from var(--color-primary) r g b / 30%);
+    
+    border: 2px solid var(--color-primary);
+    cursor: pointer;
+}

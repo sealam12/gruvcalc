@@ -1,51 +1,79 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 @import url('/static/css/input.css');
 @import url('/static/css/preview.css');
+@import url('/static/css/navbar.css');
 
 :root {
-    --color-black: rgb(28,28,28);
-    --color-grey: rgb(40,40,40);
-    --color-light-grey: rgb(60, 56, 54);
-    --color-light-grey2: rgb(124, 111, 100);
+    --THEME-bg0: rgb(28,28,28);
+    --THEME-bg1: rgb(40,40,40);
+    --THEME-bg2: rgb(60, 56, 54);
+    --THEME-bg3: rgb(124, 111, 100);
 
-    --color-primary: #d79921;
-    --color-secondary: #458588;
+    --THEME-fg: rgb(251, 241, 199);
 
-    --color-success: #8ec07c;
-    --color-error: #cc241d;
+    --THEME-primary: #d79921;
+    --THEME-secondary: #458588;
+
+    --THEME-success: #8ec07c;
+    --THEME-error: #cc241d;
+
+    --THEME-success: #73daca;
+    --THEME-error: #f7768e;
+
+    /* COLOR MAP */
+
+    --color-bg0: var(--THEME-bg0);
+    --color-bg1: var(--THEME-bg1);
+    --color-bg2: var(--THEME-bg2);
+    --color-bg3: var(--THEME-bg3);
+
+    --color-fg: var(--THEME-fg);
+
+    --color-error: var(--THEME-error);
+    --color-success: var(--THEME-success);
+
+    --color-primary: var(--THEME-primary);
+    --color-secondary: var(--THEME-secondary);
 }
 
 * {
     font-family: "JetBrains Mono", monospace;
+    transition: all 0.25s;
+    font-size: 1rem;
+    
+    color: var(--color-fg);
 }
 
 body {
     max-height: 100vh;
 
     margin: 0;
-    padding: 10vh;
     
     display: flex;
     justify-content: center;
     align-items: center;
+    vertical-align: middle;
     
     color: rgb(251, 241, 199);
-    background-color: var(--color-black);
+    background-color: var(--color-bg0);
 }
 
 #calculator-container {
-    width: 60%;
+    margin: auto;
+
+    max-width: 600px;
+    width: 80%;
     height: 60vh;
     
-    padding: 2rem;
+    padding: 1.5rem;
     
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
     
-    background-color: var(--color-grey);
+    background-color: var(--color-bg1);
     box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 20px;
     
     border-radius: 12px;
-    border: 1px solid var(--color-light-grey);
+    border: 1px solid var(--color-bg2);
 }

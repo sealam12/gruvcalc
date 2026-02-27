@@ -4,14 +4,20 @@
 
     box-sizing: border-box;
 
-    color: rgb(251, 241, 199);
-    background-color: var(--color-grey);
-
+    color: var(--color-fg);
+    
     outline: none;
     border-radius: 8px;
-    border: 2px solid var(--color-success);
-    border-top: 2px solid var(--color-light-grey);
-    border-bottom: 2px solid var(--color-light-grey);
     
-    caret-color: rgb(251, 241, 199);
+    caret-color: var(--color-fg);
+}
+
+#output-preview {
+    --PREVIEW-accent: var(--color-primary);
+
+    border: 2px solid var(--color-bg2);
+    border-left-color: var(--PREVIEW-accent);
+    border-right-color: var(--PREVIEW-accent);
+
+    &.active { background-color: rgb(from var(--PREVIEW-accent) r g b / 10%); }
 }
