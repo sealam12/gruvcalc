@@ -1,20 +1,26 @@
 const modes = {
     "normal": {
-        hotkey: "Escape",
         prefix: "=",
-        color: "var(--color-primary)"
+        hotkey: "Escape",
+        color: "var(--color-primary)",
+
+        preview: null
     },
 
     "command": {
-        hotkey: "\\",
         prefix: ">",
-        color: "var(--color-secondary)"
+        hotkey: "\\",
+        color: "var(--color-secondary)",
+
+        preview: () => ({color: "var(--color-secondary)", content: "Command mode active"})
     },
 
     "hotkey": {
-        hotkey: null,
         prefix: "@",
-        color: "var(--color-success)"
+        hotkey: null,
+        color: "var(--color-success)",
+
+        preview: null
     }
 }
 
@@ -37,6 +43,32 @@ function switchMode(newMode) {
     input.val("");
 
     mode = newMode;
+}
+
+function preview() {
+    if (mode.preview != null) {
+        outputPreview.text(mode.preview().content);
+        outputPreview.css("--PREVIEW-accent", mode.preview().color);
+        return;
+    }
+
+    let evaluated;
+    let color = "var(--color-primary)";
+    const currentVal = input.val();
+    
+    try {
+        evaluated = eval(currentVal);
+        color = evaluated != undefined ? "var(--color-success)" : "var(--color-primary)";
+        evaluated = evaluated != undefined ? evaluated.toString() : "Type an expression to view it's output";
+    } catch (error) {
+        evaluated = error.message;
+        color = "var(--color-error)";
+    }
+
+    if (evaluated != undefined) {
+        outputPreview.text(evaluated);
+        outputPreview.css("--PREVIEW-accent", color);
+    }
 }
 
 async function onKeydown(event) {
@@ -62,23 +94,7 @@ async function onKeydown(event) {
 
     await new Promise(resolve => setTimeout(resolve, 0));
 
-    let evaluated;
-    let color = "var(--color-primary)";
-    const currentVal = input.val();
-    
-    try {
-        evaluated = eval(currentVal);
-        color = evaluated != undefined ? "var(--color-success)" : "var(--color-primary)";
-        evaluated = evaluated != undefined ? evaluated.toString() : "Type an expression to view it's output";
-    } catch (error) {
-        evaluated = error.message;
-        color = "var(--color-error)";
-    }
-
-    if (evaluated != undefined) {
-        outputPreview.text(evaluated);
-        outputPreview.css("--PREVIEW-accent", color);
-    }
+    preview();
 }
 
 $(window).on("keydown", function(event) {
