@@ -1,36 +1,58 @@
+const inputContainer = $("#input-container");
+const inputPrefix = $("#input-prefix");
+const input = $("#input-box");
+const outputPreview = $("#output-preview");
+const outputContainer = $("#output-container");
+
+const commands = {
+    "clear": {
+        evaluate: (...args) => { outputContainer.html(""); },
+        descriptor: "Clears the output"
+    }
+}
+
 const modes = {
     "normal": {
         prefix: "=",
         hotkey: "Escape",
         color: "var(--color-primary)",
 
-        preview: null
-    },
+        preview: null,
+        evaluate: null,
+    },    
 
     "command": {
         prefix: ">",
         hotkey: "\\",
         color: "var(--color-secondary)",
 
-        preview: () => ({color: "var(--color-secondary)", content: "Command mode active"})
-    },
+        preview: (currentVal) => {
+            if (commands[currentVal]) {
+                return {color: "var(--color-success)", content: commands[currentVal].descriptor};
+            } else {
+                return {color: "var(--color-error)", content: "Couldn't find that command!"};
+            }
+        },
+        evaluate: (currentVal) => {
+            if (commands[currentVal]) {
+                commands[currentVal].evaluate();
+            } else {
+                return {input: currentVal, color: "var(--color-error)", content: "Couldn't find that command!"};
+            }
+        }
+    },    
 
     "hotkey": {
         prefix: "@",
         hotkey: null,
         color: "var(--color-success)",
 
-        preview: null
-    }
-}
+        preview: null,
+        evaluate: null,
+    }    
+}    
 
 let mode = modes.normal;
-
-const inputContainer = $("#input-container");
-const inputPrefix = $("#input-prefix");
-const input = $("#input-box");
-
-const outputPreview = $("#output-preview");
 
 function setPrefix(newPrefix) {
     inputPrefix.text(newPrefix);
@@ -45,16 +67,9 @@ function switchMode(newMode) {
     mode = newMode;
 }
 
-function preview() {
-    if (mode.preview != null) {
-        outputPreview.text(mode.preview().content);
-        outputPreview.css("--PREVIEW-accent", mode.preview().color);
-        return;
-    }
-
+function evaluateDefault(currentVal) {
     let evaluated;
     let color = "var(--color-primary)";
-    const currentVal = input.val();
     
     try {
         evaluated = eval(currentVal);
@@ -65,10 +80,36 @@ function preview() {
         color = "var(--color-error)";
     }
 
-    if (evaluated != undefined) {
-        outputPreview.text(evaluated);
-        outputPreview.css("--PREVIEW-accent", color);
+    return { input: currentVal, content: evaluated, color: color};
+}
+
+function preview() {
+    const currentVal = input.val();
+    const previewResult = mode.preview ? mode.preview(currentVal) : evaluateDefault(currentVal);
+
+    outputPreview.text(previewResult.content);
+    outputPreview.css("--PREVIEW-accent", previewResult.color);
+}
+
+function evaluate() {
+    const currentVal = input.val();
+    const evaluateResult = mode.evaluate ? mode.evaluate(currentVal) : evaluateDefault(currentVal);
+
+    if (!evaluateResult) {
+        return;
     }
+
+    let newElement = $(`
+        <div class="output-item">
+            <div class="output-input">${evaluateResult.input}</div>
+            <div class="output-answer">${evaluateResult.content}</div>
+        </div>
+    `);
+
+    newElement.css("--OUTPUT-ITEM-accent", evaluateResult.color);
+
+    outputContainer.prepend(newElement);
+    input.val("");
 }
 
 async function onKeydown(event) {
@@ -92,7 +133,11 @@ async function onKeydown(event) {
         }
     }
 
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await new Promise(resolve => setTimeout(resolve, 1));
+
+    if (event.key == "Enter" && input.is(":focus")) {
+        evaluate();
+    }
 
     preview();
 }
