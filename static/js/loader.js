@@ -2,7 +2,7 @@ import { corePlugin } from "/static/js/stdlib/core.js";
 
 class Loader {
     constructor() {
-        this.plugins = [corePlugin, testPlugin];
+        this.plugins = [corePlugin];
     }
 
     load() {
