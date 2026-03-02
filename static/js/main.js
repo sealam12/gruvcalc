@@ -74,7 +74,7 @@ function evaluate() {
     outputContainer.prepend(newElement);
 }
 
-async function onKeydown(event) {
+function onKeydown(event) {
     if (!input.is(":focus") && event.key == "f") {
         event.preventDefault();
         input.focus();
@@ -95,19 +95,14 @@ async function onKeydown(event) {
         }
     }
 
-    await new Promise(resolve => setTimeout(resolve, 1));
+    setTimeout(() => {
+        const currentValue = input.val();
 
-    const currentValue = input.val();
+        if (currentMode.keydown) currentMode.keydown(event, previousValue, currentValue);
+        if (event.key == "Enter" && input.is(":focus")) evaluate();
 
-    if (currentMode.keydown) {
-        currentMode.keydown(event, previousValue, currentValue);
-    }
-
-    if (event.key == "Enter" && input.is(":focus")) {
-        evaluate();
-    }
-
-    preview();
+        preview();
+    }, 1);
 }
 
 export function initialize() {
