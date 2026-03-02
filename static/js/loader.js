@@ -1,4 +1,4 @@
-import { corePlugin } from "/static/js/stdlib/core.js";
+import { corePlugin } from "./stdlib/core.js";
 
 export class PluginLoader {
     constructor() {

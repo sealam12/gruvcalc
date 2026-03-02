@@ -1,5 +1,7 @@
-import { PluginLoader } from "/static/js/loader.js";
-import { VisualManager } from "/static/js/visual.js";
+import { PluginLoader } from "./loader.js";
+import { VisualManager } from "./visual.js";
+
+import { evaluateDefault } from "./default.js";
 
 const input = $("#input-box");
 
@@ -28,27 +30,11 @@ export class Gruvcalc {
         this.currentMode = newMode;
     }
 
-    evaluateDefault(currentVal) {
-        let evaluated;
-        let color = "var(--color-primary)";
-        
-        try {
-            evaluated = eval(currentVal);
-            color = evaluated != undefined ? "var(--color-success)" : "var(--color-primary)";
-            evaluated = evaluated != undefined ? evaluated.toString() : "Type an expression to view it's output";
-        } catch (error) {
-            evaluated = error.message;
-            color = "var(--color-error)";
-        }
-
-        return { input: currentVal, content: evaluated, color: color};
-    }
-
     preview() {
         const currentVal = input.val();
         const previewResult = this.currentMode.preview ? 
             this.currentMode.preview(currentVal) : 
-            this.evaluateDefault(currentVal);
+            evaluateDefault(currentVal);
 
         this.visual.updatePreview(previewResult);
     }
@@ -57,7 +43,7 @@ export class Gruvcalc {
         const currentVal = input.val();
         const evaluateResult = this.currentMode.evaluate ? 
             this.currentMode.evaluate(currentVal) : 
-            this.evaluateDefault(currentVal);
+            evaluateDefault(currentVal);
         
         input.val("");
 

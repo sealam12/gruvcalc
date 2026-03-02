@@ -1,5 +1,5 @@
-import { Plugin } from "/static/js/plugin.js";
-import { Mode } from "/static/js/mode.js";
+import { Plugin } from "../plugin.js";
+import { Mode } from "../mode.js";
 
 window.commands = {
     "clear": {

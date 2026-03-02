@@ -15,4 +15,10 @@ export class Plugin {
     load() {
         if (this.loadFunc) this.loadFunc();
     }
+
+    ///////////////////////////////////////////////////////
+
+    getMode(name) {
+        return this.modes.find(mode => mode.name === name);
+    }
 }
