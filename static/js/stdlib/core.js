@@ -1,7 +1,7 @@
 import { Plugin } from "/static/js/plugin.js";
 import { Mode } from "/static/js/mode.js";
 
-const commands = {
+window.commands = {
     "clear": {
         evaluate: (...args) => { $("#output-container").html(""); },
         descriptor: "Clears the output"
@@ -39,5 +39,36 @@ export const corePlugin = new Plugin(
         ),
     
         new Mode("insert", "@", undefined, "var(--color-success)")
-    ]
+    ],
+    () => {
+        window.factorial = (n) => { return n <= 1 ? 1 : n * factorial(n - 1); }
+        window.termial = (n) => { return n <= 1 ? 1 : n + termial(n - 1); }
+
+        window.sum = (...args) => args.reduce((a, b) => a + b, 0);
+        window.product = (...args) => args.reduce((a, b) => a * b, 1);
+        
+        // statistics functions
+
+        window.average = (...args) => sum(...args) / args.length;
+        window.avg = window.average;
+
+        window.standardDeviation = (...args) => {
+            const avg = average(...args);
+            const squareDiffs = args.map(x => Math.pow(x - avg, 2));
+            return Math.sqrt(average(...squareDiffs));
+        }
+        window.stdev = window.standardDeviation;
+
+        window.meanAbsoluteDeviation = (...args) => {
+            const avg = average(...args);
+            const absDiffs = args.map(x => Math.abs(x - avg));
+            return average(...absDiffs);
+        }
+        window.mad = window.meanAbsoluteDeviation;
+
+        // constants
+
+        window.e = Math.E;
+        window.pi = Math.PI;
+    }
 )

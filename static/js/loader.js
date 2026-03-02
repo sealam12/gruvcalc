@@ -2,7 +2,12 @@ import { corePlugin } from "/static/js/stdlib/core.js";
 
 class Loader {
     constructor() {
-        this.plugins = [corePlugin];
+        this.plugins = [corePlugin, testPlugin];
+    }
+
+    load() {
+        for (const plugin of this.plugins) plugin.preload();
+        for (const plugin of this.plugins) plugin.load();
     }
 
     get modes() {

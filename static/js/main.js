@@ -106,6 +106,8 @@ function onKeydown(event) {
 }
 
 export function initialize() {
+    Plugins.load();
+
     switchMode(Plugins.modes[0]);
     $(window).on("keydown", function(event) {
         onKeydown(event);
