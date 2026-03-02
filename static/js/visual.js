@@ -13,7 +13,7 @@ export class VisualManager {
     }
 
     switchMode(newMode) {
-        setPrefix(newMode.prefix);
+        this.setPrefix(newMode.prefix);
         inputContainer.css("--INPUT-accent", newMode.color);
         input.focus();
         input.val("");

@@ -3,7 +3,7 @@ import { VisualManager } from "/static/js/visual.js";
 
 const input = $("#input-box");
 
-class Gruvcalc {
+export class Gruvcalc {
     constructor() {
         this.plugins = new PluginLoader();
         this.visual = new VisualManager();
@@ -16,8 +16,8 @@ class Gruvcalc {
 
         this.switchMode(this.plugins.getModes()[0]);
         
-        $(window).on("keydown", function(event) {
-            onKeydown(event);
+        $(window).on("keydown", (event) => {
+            this.onKeydown(event);
         });
 
         input.focus();
@@ -46,14 +46,18 @@ class Gruvcalc {
 
     preview() {
         const currentVal = input.val();
-        const previewResult = currentMode.preview ? currentMode.preview(currentVal) : evaluateDefault(currentVal);
+        const previewResult = this.currentMode.preview ? 
+            this.currentMode.preview(currentVal) : 
+            this.evaluateDefault(currentVal);
 
-        visual.updatePreview(previewResult);
+        this.visual.updatePreview(previewResult);
     }
 
     evaluate() {
         const currentVal = input.val();
-        const evaluateResult = currentMode.evaluate ? currentMode.evaluate(currentVal) : evaluateDefault(currentVal);
+        const evaluateResult = this.currentMode.evaluate ? 
+            this.currentMode.evaluate(currentVal) : 
+            this.evaluateDefault(currentVal);
         
         input.val("");
 
@@ -61,7 +65,7 @@ class Gruvcalc {
             return;
         }
 
-        visual.createOutput(evaluateResult);
+        this.visual.createOutput(evaluateResult);
     }
 
     onKeydown(event) {
