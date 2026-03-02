@@ -2,6 +2,13 @@
     <head>
         <link rel="stylesheet" href="/static/css/main.css">
 
+        <script>
+            window.onerror = function (message, url, lineNo, columnNo, error) {
+                document.body.innerHTML = `${message} at line ${lineNo}:${columnNo}`;
+                return true;
+            };
+        </script>
+        
         <script src="/static/jquery.js"></script>
         <script type="module" src="/static/js/main.js"></script>
     </head>
@@ -34,6 +41,11 @@
             <!-- output history -->
             <div id="output-container">
             </div>
+
+            <script type="module">
+                import { initialize } from "/static/js/main.js";
+                initialize();
+            </script>
         </div>
     </body>
 </html>

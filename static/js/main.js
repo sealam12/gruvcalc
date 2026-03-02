@@ -1,58 +1,13 @@
+import { Plugins } from "/static/js/loader.js";
+
 const inputContainer = $("#input-container");
 const inputPrefix = $("#input-prefix");
 const input = $("#input-box");
+
 const outputPreview = $("#output-preview");
 const outputContainer = $("#output-container");
 
-const commands = {
-    "clear": {
-        evaluate: (...args) => { outputContainer.html(""); },
-        descriptor: "Clears the output"
-    }
-}
-
-const modes = {
-    "normal": {
-        prefix: "=",
-        hotkey: "Escape",
-        color: "var(--color-primary)",
-
-        preview: null,
-        evaluate: null,
-    },    
-
-    "command": {
-        prefix: ">",
-        hotkey: "\\",
-        color: "var(--color-secondary)",
-
-        preview: (currentVal) => {
-            if (commands[currentVal]) {
-                return {color: "var(--color-success)", content: commands[currentVal].descriptor};
-            } else {
-                return {color: "var(--color-error)", content: "Couldn't find that command!"};
-            }
-        },
-        evaluate: (currentVal) => {
-            if (commands[currentVal]) {
-                commands[currentVal].evaluate();
-            } else {
-                return {input: currentVal, color: "var(--color-error)", content: "Couldn't find that command!"};
-            }
-        }
-    },    
-
-    "hotkey": {
-        prefix: "@",
-        hotkey: null,
-        color: "var(--color-success)",
-
-        preview: null,
-        evaluate: null,
-    }    
-}    
-
-let mode = modes.normal;
+let currentMode;
 
 function setPrefix(newPrefix) {
     inputPrefix.text(newPrefix);
@@ -64,7 +19,7 @@ function switchMode(newMode) {
     input.focus();
     input.val("");
 
-    mode = newMode;
+    currentMode = newMode;
 }
 
 function evaluateDefault(currentVal) {
@@ -85,7 +40,7 @@ function evaluateDefault(currentVal) {
 
 function preview() {
     const currentVal = input.val();
-    const previewResult = mode.preview ? mode.preview(currentVal) : evaluateDefault(currentVal);
+    const previewResult = currentMode.preview ? currentMode.preview(currentVal) : evaluateDefault(currentVal);
 
     outputPreview.text(previewResult.content);
     outputPreview.css("--PREVIEW-accent", previewResult.color);
@@ -93,7 +48,9 @@ function preview() {
 
 function evaluate() {
     const currentVal = input.val();
-    const evaluateResult = mode.evaluate ? mode.evaluate(currentVal) : evaluateDefault(currentVal);
+    const evaluateResult = currentMode.evaluate ? currentMode.evaluate(currentVal) : evaluateDefault(currentVal);
+    
+    input.val("");
 
     if (!evaluateResult) {
         return;
@@ -101,15 +58,20 @@ function evaluate() {
 
     let newElement = $(`
         <div class="output-item">
-            <div class="output-input">${evaluateResult.input}</div>
-            <div class="output-answer">${evaluateResult.content}</div>
         </div>
     `);
+
+    if (evaluateResult.input) {
+        newElement.append($(`<div class="output-input">${evaluateResult.input}</div>`));
+    }
+
+    if (evaluateResult.content) {
+        newElement.append($(`<div class="output-answer">${evaluateResult.content}</div>`));
+    }
 
     newElement.css("--OUTPUT-ITEM-accent", evaluateResult.color);
 
     outputContainer.prepend(newElement);
-    input.val("");
 }
 
 async function onKeydown(event) {
@@ -121,7 +83,7 @@ async function onKeydown(event) {
 
     const previousValue = input.val();
 
-    for (const [modeName, mode] of Object.entries(modes)) {
+    for (const mode of Plugins.modes) {
         if (event.key === mode.hotkey) {
             event.preventDefault();
             switchMode(mode);
@@ -135,6 +97,12 @@ async function onKeydown(event) {
 
     await new Promise(resolve => setTimeout(resolve, 1));
 
+    const currentValue = input.val();
+
+    if (currentMode.keydown) {
+        currentMode.keydown(event, previousValue, currentValue);
+    }
+
     if (event.key == "Enter" && input.is(":focus")) {
         evaluate();
     }
@@ -142,11 +110,11 @@ async function onKeydown(event) {
     preview();
 }
 
-$(window).on("keydown", function(event) {
-    onKeydown(event);
-})
+export function initialize() {
+    switchMode(Plugins.modes[0]);
+    $(window).on("keydown", function(event) {
+        onKeydown(event);
+    });
 
-window.onerror = function (message, url, lineNo, columnNo, error) {
-    document.body.innerHTML = `${message} at line ${lineNo}:${columnNo}`;
-    return true;
-};
+    input.focus();
+}
