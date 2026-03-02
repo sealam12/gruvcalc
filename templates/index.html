@@ -43,8 +43,9 @@
             </div>
 
             <script type="module">
-                import { initialize } from "/static/js/main.js";
-                initialize();
+                import { Gruvcalc } from "/static/js/main.js";
+                window.gruvcalc = new Gruvcalc();
+                window.gruvcalc.load();
             </script>
         </div>
     </body>

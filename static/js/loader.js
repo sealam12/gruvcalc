@@ -1,6 +1,6 @@
 import { corePlugin } from "/static/js/stdlib/core.js";
 
-class Loader {
+export class PluginLoader {
     constructor() {
         this.plugins = [corePlugin];
     }
@@ -10,9 +10,7 @@ class Loader {
         for (const plugin of this.plugins) plugin.load();
     }
 
-    get modes() {
+    getModes() {
         return this.plugins.flatMap(plugin => plugin.modes);
     }
 }
-
-export let Plugins = new Loader();

@@ -1,117 +1,97 @@
-import { Plugins } from "/static/js/loader.js";
+import { PluginLoader } from "/static/js/loader.js";
+import { VisualManager } from "/static/js/visual.js";
 
-const inputContainer = $("#input-container");
-const inputPrefix = $("#input-prefix");
 const input = $("#input-box");
 
-const outputPreview = $("#output-preview");
-const outputContainer = $("#output-container");
+class Gruvcalc {
+    constructor() {
+        this.plugins = new PluginLoader();
+        this.visual = new VisualManager();
 
-let currentMode;
-
-function setPrefix(newPrefix) {
-    inputPrefix.text(newPrefix);
-}
-
-function switchMode(newMode) {
-    setPrefix(newMode.prefix);
-    inputContainer.css("--INPUT-accent", newMode.color);
-    input.focus();
-    input.val("");
-
-    currentMode = newMode;
-}
-
-function evaluateDefault(currentVal) {
-    let evaluated;
-    let color = "var(--color-primary)";
-    
-    try {
-        evaluated = eval(currentVal);
-        color = evaluated != undefined ? "var(--color-success)" : "var(--color-primary)";
-        evaluated = evaluated != undefined ? evaluated.toString() : "Type an expression to view it's output";
-    } catch (error) {
-        evaluated = error.message;
-        color = "var(--color-error)";
+        this.currentMode = undefined;
     }
 
-    return { input: currentVal, content: evaluated, color: color};
-}
+    load() {
+        this.plugins.load();
 
-function preview() {
-    const currentVal = input.val();
-    const previewResult = currentMode.preview ? currentMode.preview(currentVal) : evaluateDefault(currentVal);
+        this.switchMode(this.plugins.getModes()[0]);
+        
+        $(window).on("keydown", function(event) {
+            onKeydown(event);
+        });
 
-    outputPreview.text(previewResult.content);
-    outputPreview.css("--PREVIEW-accent", previewResult.color);
-}
-
-function evaluate() {
-    const currentVal = input.val();
-    const evaluateResult = currentMode.evaluate ? currentMode.evaluate(currentVal) : evaluateDefault(currentVal);
-    
-    input.val("");
-
-    if (!evaluateResult) {
-        return;
-    }
-
-    let newElement = $(`
-        <div class="output-item">
-        </div>
-    `);
-
-    if (evaluateResult.input) {
-        newElement.append($(`<div class="output-input">${evaluateResult.input}</div>`));
-    }
-
-    if (evaluateResult.content) {
-        newElement.append($(`<div class="output-answer">${evaluateResult.content}</div>`));
-    }
-
-    newElement.css("--OUTPUT-ITEM-accent", evaluateResult.color);
-
-    outputContainer.prepend(newElement);
-}
-
-function onKeydown(event) {
-    if (!input.is(":focus") && event.key == "f") {
-        event.preventDefault();
         input.focus();
-        return;
     }
 
-    const previousValue = input.val();
-
-    for (const mode of Plugins.modes) {
-        if (event.key === mode.hotkey) {
-            event.preventDefault();
-            switchMode(mode);
-        }
-
-        if (previousValue.trim() == "" && event.key === mode.prefix) {
-            event.preventDefault();
-            switchMode(mode);
-        }
+    switchMode(newMode) {
+        this.visual.switchMode(newMode);
+        this.currentMode = newMode;
     }
 
-    setTimeout(() => {
-        const currentValue = input.val();
+    evaluateDefault(currentVal) {
+        let evaluated;
+        let color = "var(--color-primary)";
+        
+        try {
+            evaluated = eval(currentVal);
+            color = evaluated != undefined ? "var(--color-success)" : "var(--color-primary)";
+            evaluated = evaluated != undefined ? evaluated.toString() : "Type an expression to view it's output";
+        } catch (error) {
+            evaluated = error.message;
+            color = "var(--color-error)";
+        }
 
-        if (currentMode.keydown) currentMode.keydown(event, previousValue, currentValue);
-        if (event.key == "Enter" && input.is(":focus")) evaluate();
+        return { input: currentVal, content: evaluated, color: color};
+    }
 
-        preview();
-    }, 1);
-}
+    preview() {
+        const currentVal = input.val();
+        const previewResult = currentMode.preview ? currentMode.preview(currentVal) : evaluateDefault(currentVal);
 
-export function initialize() {
-    Plugins.load();
+        visual.updatePreview(previewResult);
+    }
 
-    switchMode(Plugins.modes[0]);
-    $(window).on("keydown", function(event) {
-        onKeydown(event);
-    });
+    evaluate() {
+        const currentVal = input.val();
+        const evaluateResult = currentMode.evaluate ? currentMode.evaluate(currentVal) : evaluateDefault(currentVal);
+        
+        input.val("");
 
-    input.focus();
+        if (!evaluateResult) {
+            return;
+        }
+
+        visual.createOutput(evaluateResult);
+    }
+
+    onKeydown(event) {
+        if (!input.is(":focus") && event.key == "f") {
+            event.preventDefault();
+            input.focus();
+            return;
+        }
+
+        const previousValue = input.val();
+
+        for (const mode of this.plugins.getModes()) {
+            if (event.key === mode.hotkey) {
+                event.preventDefault();
+                this.switchMode(mode);
+            }
+
+            if (previousValue.trim() == "" && event.key === mode.prefix) {
+                event.preventDefault();
+                this.switchMode(mode);
+            }
+        }
+
+        setTimeout(() => {
+            const currentValue = input.val();
+
+            if (this.currentMode.keydown) this.currentMode.keydown(event, previousValue, currentValue);
+            if (event.key == "Enter" && input.is(":focus")) this.evaluate();
+
+            this.preview();
+        }, 1);
+    }
 }
