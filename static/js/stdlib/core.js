@@ -73,4 +73,19 @@ export const corePlugin = new Plugin(
         window.e = Math.E;
         window.pi = Math.PI;
     },
+
+    () => {
+        window.gruvcalc.visual.createNavbarButton("Help", () => {
+            alert("This is GruvCalc, a calculator for the modern age! \n\n" +
+                "To get started, just type in any mathematical expression and hit Enter! \n" +
+                "You can also use the following commands: \n\n" +
+                Object.keys(commands).map(cmd => `${cmd}: ${commands[cmd].descriptor}`).join("\n")
+            );
+        });
+
+        window.gruvcalc.visual.createNavbarButton("Plugins", () => {
+            const pluginList = window.gruvcalc.plugins.plugins.map(plugin => `- ${plugin.name}: ${plugin.description}`).join("\n");
+            alert(`Loaded plugins:\n\n${pluginList}`);
+        });
+    }
 )

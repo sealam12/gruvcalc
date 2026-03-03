@@ -1,3 +1,5 @@
+const navbarContainer = $("#navbar-container");
+
 const inputContainer = $("#input-container");
 const inputPrefix = $("#input-prefix");
 const input = $("#input-box");
@@ -41,5 +43,12 @@ export class VisualManager {
         newElement.css("--OUTPUT-ITEM-accent", evaluateResult.color);
 
         outputContainer.prepend(newElement);
+    }
+
+    createNavbarButton(text, onClick) {
+        const button = $(`<button class="navbar-button">${text}</button>`);
+        button.on("click", onClick);
+
+        navbarContainer.append(button);
     }
 }
