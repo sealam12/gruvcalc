@@ -10,13 +10,15 @@ export class Gruvcalc {
         this.plugins = new PluginLoader();
         this.visual = new VisualManager();
 
+        this.defaultMode = undefined;
         this.currentMode = undefined;
     }
 
     load() {
         this.plugins.load();
 
-        this.switchMode(this.plugins.getModes()[0]);
+        this.defaultMode = this.plugins.getPlugin("core").getMode("normal");
+        this.switchMode(this.defaultMode);
         
         $(window).on("keydown", (event) => {
             this.onKeydown(event);
@@ -27,7 +29,7 @@ export class Gruvcalc {
 
     reset() {
         input.val("");
-        this.switchMode(this.plugins.getModes()[0]);
+        this.switchMode(this.defaultMode);
         this.preview();
     }
 

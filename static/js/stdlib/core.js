@@ -14,6 +14,7 @@ window.commands = {
 }
 
 export const corePlugin = new Plugin(
+    "core",
     "GruvCalc Core",
     "The core plugin of GruvCalc. Contains the default modes, commands, and functions.",
     [
@@ -71,5 +72,5 @@ export const corePlugin = new Plugin(
 
         window.e = Math.E;
         window.pi = Math.PI;
-    }
+    },
 )
