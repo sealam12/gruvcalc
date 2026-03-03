@@ -1,4 +1,5 @@
 import { Plugin } from "./plugin.js";
+import { Mode } from "./mode.js";
 import { corePlugin } from "./stdlib/core.js";
 
 export class PluginLoader {
@@ -8,7 +9,6 @@ export class PluginLoader {
     }
 
     #network() {
-        /*
         try {
             fetch("/api/plugins/")
                 .then(response => response.json())
@@ -17,14 +17,18 @@ export class PluginLoader {
                 });
         } catch (e) {
             alert("Failed to fetch available plugins: " + e.message);
-        }*/
+        }
 
-        JSON.parse(/*localStorage.getItem("gruvcalc_plugins") || "[]")*/'["example-plugin"]').forEach(async pluginSlug => {
+        JSON.parse(localStorage.getItem("gruvcalc_plugins") || "[]").forEach(async pluginSlug => {
             try {
                 if (pluginSlug && pluginSlug != "core") {
                     try {
-                        const pluginModule = await import(`/api/plugins/${pluginSlug}.js/`);
-                        this.plugins.push(pluginModule.default(Plugin));
+                        const plugin = eval(
+                            await fetch(`/api/plugins/${pluginSlug}.js/`)
+                                .then(response => response.text())
+                        );
+
+                        this.plugins.push(plugin);
                     } catch (e) {
                         alert(e.toString());
                     }

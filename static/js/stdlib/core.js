@@ -10,6 +10,34 @@ window.commands = {
     "echo": {
         evaluate: (...args) => { return {input: args.join(" "), content: null}; },
         descriptor: "Echoes the input"
+    },
+
+    "addplugin": {
+        evaluate: (slug) => {
+            const plugins = JSON.parse(localStorage.getItem("gruvcalc_plugins") || "[]");
+            if (!plugins.includes(slug)) {
+                plugins.push(slug);
+                localStorage.setItem("gruvcalc_plugins", JSON.stringify(plugins));
+                alert(`Plugin ${slug} added! It will be loaded on the next page load.`);
+            } else {
+                alert(`Plugin ${slug} is already added.`);
+            }
+        },
+        descriptor: "Adds a plugin by slug. Usage: addplugin <slug>"
+    },
+
+    "removeplugin": {
+        evaluate: (slug) => {
+            let plugins = JSON.parse(localStorage.getItem("gruvcalc_plugins") || "[]");
+            if (plugins.includes(slug)) {
+                plugins = plugins.filter(s => s !== slug);
+                localStorage.setItem("gruvcalc_plugins", JSON.stringify(plugins));
+                alert(`Plugin ${slug} removed! It will be unloaded on the next page load.`);
+            } else {
+                alert(`Plugin ${slug} is not in the list.`);
+            }
+        },
+        descriptor: "Removes a plugin by slug. Usage: removeplugin <slug>"
     }
 }
 
