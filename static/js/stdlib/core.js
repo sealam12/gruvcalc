@@ -31,6 +31,7 @@ export const corePlugin = new Plugin(
             (currentVal) => {
                 const args = currentVal.split(" ");
                 if (commands[args[0]]) {
+                    window.gruvcalc.reset();
                     return commands[args[0]].evaluate(...args.slice(1));
                 } else {
                     return {input: currentVal, color: "var(--color-error)", content: "Couldn't find that command!"};

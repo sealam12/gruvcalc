@@ -25,6 +25,12 @@ export class Gruvcalc {
         input.focus();
     }
 
+    reset() {
+        input.val("");
+        this.switchMode(this.plugins.getModes()[0]);
+        this.preview();
+    }
+
     switchMode(newMode) {
         this.visual.switchMode(newMode);
         this.currentMode = newMode;
@@ -41,6 +47,8 @@ export class Gruvcalc {
 
     evaluate() {
         const currentVal = input.val();
+        if (currentVal.trim() == "") { return; }
+
         const evaluateResult = this.currentMode.evaluate ? 
             this.currentMode.evaluate(currentVal) : 
             evaluateDefault(currentVal);
