@@ -11,7 +11,9 @@ export class PluginLoader {
         }
 
         for (const plugin of this.plugins) {
-            plugin.load();
+            plugin.load({
+                getPlugin: (slug) => this.getPlugin(slug),
+            });
         }
     }
 

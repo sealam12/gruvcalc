@@ -72,6 +72,10 @@ export const corePlugin = new Plugin(
 
         window.e = Math.E;
         window.pi = Math.PI;
+
+        // exports
+
+        corePlugin.testValue = 123;
     },
 
     () => {
