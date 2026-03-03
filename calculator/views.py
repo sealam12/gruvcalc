@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 from . import models
 
@@ -16,13 +16,7 @@ def plugins_index(request):
         
     return JsonResponse(plugins_list, safe=False)
 
-def plugin_fetch(request, id):
-    plugin = get_object_or_404(models.Plugin, pk=id)
+def plugin_fetch(request, slug):
+    plugin = get_object_or_404(models.Plugin, slug=slug)
     
-    plugin = {
-        "Name": plugin.name,
-        "Description": plugin.description,
-        "Content": plugin.content,
-    }
-        
-    return JsonResponse(plugin)
+    return HttpResponse(plugin.content, content_type="application/javascript")

@@ -20,6 +20,6 @@ from . import views
 
 urlpatterns = [
     path('', views.calculator),
-    path('plugins/', views.plugins_index),
-    path('plugins/<int:id>/', views.plugin_fetch)
+    path('api/plugins/', views.plugins_index),
+    path('api/plugins/<slug:slug>.js/', views.plugin_fetch)
 ]
