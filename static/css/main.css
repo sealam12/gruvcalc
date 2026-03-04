@@ -12,6 +12,7 @@
     --THEME-bg3: rgb(124, 111, 100);
 
     --THEME-fg: rgb(251, 241, 199);
+    --THEME-fg1: rgb(213, 196, 161);
 
     --THEME-primary: #d79921;
     --THEME-secondary: #458588;
@@ -27,6 +28,7 @@
     --color-bg3: var(--THEME-bg3);
 
     --color-fg: var(--THEME-fg);
+    --color-fg1: var(--THEME-fg1);
 
     --color-error: var(--THEME-error);
     --color-success: var(--THEME-success);
@@ -38,7 +40,6 @@
 * {
     font-family: "JetBrains Mono", monospace;
     transition: all 0.25s;
-    font-size: 1rem;
     
     color: var(--color-fg);
 }

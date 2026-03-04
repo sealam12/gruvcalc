@@ -40,22 +40,23 @@
             <div id="output-container">
             </div>
 
-			<div id="modal" class="modal">
-					<style>
-    #ModalTop {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        }
-    </style>
-    <div class="modal-content">
-        <div id="ModalTop">
-            <p>Modal: ${ModalObject.Title}</p>
-        </div>
-        ${ModalObject.Content}
-    </div>
-		    </div>
+			<div id="modal-container">
+                <div id="modal-body">
+                    <div id="modal-title">
+                        <p id="modal-title-text">Modal: Help</p>
+                        <button id="modal-close-button">Close</button>
+                    </div>
+                    
+                    <div id="modal-content">
+                        <h1 class="title">Help</h1>
+                        <h3 class="subtitle">Gruvcalc Help</h3>
+                        
+                        <p>Type an expression into the input box to see its output. Click on any output to copy it to the clipboard.</p>
+                        <p>Gruvcalc supports a wide variety of mathematical functions, as well as some custom commands. For a full list of supported syntax, see the <a href="/static/docs/syntax.md" target="_blank">syntax documentation</a>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <script type="module">
                 import { Gruvcalc } from "/static/js/main.js";

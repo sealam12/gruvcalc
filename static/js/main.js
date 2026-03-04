@@ -3,18 +3,22 @@ import { VisualManager } from "./visual.js";
 
 import { evaluateDefault } from "./default.js";
 
+import { ModalManager } from "./modal.js";
+
 const input = $("#input-box");
 
 export class Gruvcalc {
     constructor() {
         this.plugins = new PluginLoader();
         this.visual = new VisualManager();
+        this.modal = new ModalManager();
 
         this.defaultMode = undefined;
         this.currentMode = undefined;
     }
 
     load() {
+        this.modal.init();
         this.plugins.load();
 
         this.defaultMode = this.plugins.getPlugin("core").getMode("normal");
@@ -25,6 +29,11 @@ export class Gruvcalc {
         });
 
         input.focus();
+
+        this.modal.showModal({
+            title: "Welcome to Gruvcalc!",
+            content: "Welcome to Gruvcalc!",
+        });
     }
 
     reset() {
@@ -65,11 +74,24 @@ export class Gruvcalc {
     }
 
     onKeydown(event) {
+        if (this.modal.isOpen()) {
+            if (event.key == "Escape") {
+                event.preventDefault();
+                this.modal.hideModal();
+            }
+
+            return;
+        }
+
+        /* ---------------------------------------------------------- */
+
         if (!input.is(":focus") && event.key == "f") {
             event.preventDefault();
             input.focus();
             return;
         }
+
+        /* ---------------------------------------------------------- */
 
         const previousValue = input.val();
 
@@ -84,6 +106,8 @@ export class Gruvcalc {
                 this.switchMode(mode);
             }
         }
+
+        /* ---------------------------------------------------------- */
 
         setTimeout(() => {
             const currentValue = input.val();
