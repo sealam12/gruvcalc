@@ -28,12 +28,7 @@ export class Gruvcalc {
             this.onKeydown(event);
         });
 
-        input.focus();
-
-        this.modal.showModal({
-            title: "Welcome to Gruvcalc!",
-            content: "Welcome to Gruvcalc!",
-        });
+        
     }
 
     reset() {

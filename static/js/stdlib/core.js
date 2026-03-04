@@ -4,12 +4,29 @@ import { Mode } from "../mode.js";
 window.commands = {
     "clear": {
         evaluate: (...args) => { $("#output-container").html(""); },
-        descriptor: "Clears the output"
+        description: "Clears the output"
     },
 
     "echo": {
         evaluate: (...args) => { return {input: args.join(" "), content: null}; },
-        descriptor: "Echoes the input"
+        description: "Echoes the input"
+    },
+
+    "help": {
+        evaluate: (...args) => {
+            window.gruvcalc.modal.showModal({
+                title: "Help",
+                content: `
+                    <h2 class="title">GruvCalc Help</h2>
+                    <p class="subtitle">Welcome to GruvCalc!</p>
+                    <p>You can also use the following commands:</p>
+                    <ul>
+                        ${Object.keys(commands).map(cmd => `<li><strong>${cmd}</strong>: ${commands[cmd].description}</li>`).join("\n")}
+                    </ul>
+                `
+            });
+        },
+        description: "Shows this help message"
     },
 
     "addplugin": {
@@ -23,7 +40,7 @@ window.commands = {
                 alert(`Plugin ${slug} is already added.`);
             }
         },
-        descriptor: "Adds a plugin by slug. Usage: addplugin <slug>"
+        description: "Adds a plugin by slug. Usage: addplugin <slug>"
     },
 
     "removeplugin": {
@@ -37,7 +54,7 @@ window.commands = {
                 alert(`Plugin ${slug} is not in the list.`);
             }
         },
-        descriptor: "Removes a plugin by slug. Usage: removeplugin <slug>"
+        description: "Removes a plugin by slug. Usage: removeplugin <slug>"
     }
 }
 
@@ -52,7 +69,7 @@ export const corePlugin = new Plugin(
             (currentVal) => {
                 const args = currentVal.split(" ");
                 if (commands[args[0]]) {
-                    return {color: "var(--color-success)", content: commands[args[0]].descriptor};
+                    return {color: "var(--color-success)", content: commands[args[0]].description};
                 } else {
                     return {color: "var(--color-error)", content: "Couldn't find that command!"};
                 }
@@ -111,7 +128,7 @@ export const corePlugin = new Plugin(
             alert("This is GruvCalc, a calculator for the modern age! \n\n" +
                 "To get started, just type in any mathematical expression and hit Enter! \n" +
                 "You can also use the following commands: \n\n" +
-                Object.keys(commands).map(cmd => `${cmd}: ${commands[cmd].descriptor}`).join("\n")
+                Object.keys(commands).map(cmd => `${cmd}: ${commands[cmd].description}`).join("\n")
             );
         });
 
