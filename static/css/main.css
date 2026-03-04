@@ -3,6 +3,7 @@
 @import url('/static/css/input.css');
 @import url('/static/css/preview.css');
 @import url('/static/css/output.css');
+@import url('/static/css/modal.css');
 
 :root {
     --THEME-bg0: rgb(28,28,28);

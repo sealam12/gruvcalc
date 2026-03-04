@@ -40,6 +40,23 @@
             <div id="output-container">
             </div>
 
+			<div id="modal" class="modal">
+					<style>
+    #ModalTop {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        }
+    </style>
+    <div class="modal-content">
+        <div id="ModalTop">
+            <p>Modal: ${ModalObject.Title}</p>
+        </div>
+        ${ModalObject.Content}
+    </div>
+		    </div>
+
             <script type="module">
                 import { Gruvcalc } from "/static/js/main.js";
                 window.gruvcalc = new Gruvcalc();
