@@ -1,5 +1,20 @@
 import { Plugin } from "../plugin.js";
 import { Mode } from "../mode.js";
+import { Modal } from "../modal.js";
+
+function launchHelpModal() {
+    window.gruvcalc.modal.showModal(new Modal(
+        "Gruvcalc Core - Help",
+        `
+            <h2 class="title">GruvCalc Help</h2>
+            <p class="subtitle">Welcome to GruvCalc!</p>
+            <p>You can also use the following commands:</p>
+            <ul>
+                ${Object.keys(commands).map(cmd => `<li><strong>${cmd}</strong>: ${commands[cmd].description}</li>`).join("\n")}
+            </ul>
+        `
+    ));
+}
 
 window.commands = {
     "clear": {
@@ -13,19 +28,7 @@ window.commands = {
     },
 
     "help": {
-        evaluate: (...args) => {
-            window.gruvcalc.modal.showModal({
-                title: "Help",
-                content: `
-                    <h2 class="title">GruvCalc Help</h2>
-                    <p class="subtitle">Welcome to GruvCalc!</p>
-                    <p>You can also use the following commands:</p>
-                    <ul>
-                        ${Object.keys(commands).map(cmd => `<li><strong>${cmd}</strong>: ${commands[cmd].description}</li>`).join("\n")}
-                    </ul>
-                `
-            });
-        },
+        evaluate: launchHelpModal,
         description: "Shows this help message"
     },
 
@@ -124,13 +127,7 @@ export const corePlugin = new Plugin(
     },
 
     () => {
-        window.gruvcalc.visual.createNavbarButton("Help", () => {
-            alert("This is GruvCalc, a calculator for the modern age! \n\n" +
-                "To get started, just type in any mathematical expression and hit Enter! \n" +
-                "You can also use the following commands: \n\n" +
-                Object.keys(commands).map(cmd => `${cmd}: ${commands[cmd].description}`).join("\n")
-            );
-        });
+        window.gruvcalc.visual.createNavbarButton("Help", launchHelpModal);
 
         window.gruvcalc.visual.createNavbarButton("Plugins", () => {
             const pluginList = window.gruvcalc.plugins.plugins.map(plugin => `- ${plugin.name}: ${plugin.description}`).join("\n");

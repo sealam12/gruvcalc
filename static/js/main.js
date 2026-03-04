@@ -27,8 +27,6 @@ export class Gruvcalc {
         $(window).on("keydown", (event) => {
             this.onKeydown(event);
         });
-
-        
     }
 
     reset() {

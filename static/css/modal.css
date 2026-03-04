@@ -1,5 +1,9 @@
 #modal-container {
     display: none;
+    opacity: 0%;
+
+    transition: all 0.25s, display 0s;
+
     position: fixed;
     top: 0;
     left: 0;
