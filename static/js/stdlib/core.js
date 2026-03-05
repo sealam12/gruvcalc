@@ -34,14 +34,14 @@ window.commands = {
 
     "addplugin": {
         evaluate: (slug) => {
-            window.gruvcalc.plugins.addPlugin(slug);
+            window.gruvcalc.plugins.registerPlugin(slug);
         },
         description: "Adds a plugin by slug. Usage: addplugin <slug>"
     },
 
     "removeplugin": {
         evaluate: (slug) => {
-            window.gruvcalc.plugins.removePlugin(slug);
+            window.gruvcalc.plugins.unregisterPlugin(slug);
         },
         description: "Removes a plugin by slug. Usage: removeplugin <slug>"
     }

@@ -8,6 +8,8 @@ export class PluginLoader {
         this.availablePlugins = [];
     }
 
+    /* ------------------------------------------------------- */
+
     getPlugin(pluginSlug) {
         return this.plugins.find(plugin => plugin.slug == pluginSlug);
     }
@@ -15,6 +17,8 @@ export class PluginLoader {
     getModes() {
         return this.plugins.flatMap(plugin => plugin.modes);
     }
+
+    /* ------------------------------------------------------- */
 
     getRegisteredPlugins() {
         let fromLocalStorage;
@@ -29,7 +33,7 @@ export class PluginLoader {
         return fromLocalStorage;
     }
 
-    addPlugin(pluginSlug) {
+    registerPlugin(pluginSlug) {
         if (!this.availablePlugins.includes(pluginSlug)) {
             alert(`Cannot add plugin ${pluginSlug}: does not exist.`);
             return;
@@ -45,7 +49,7 @@ export class PluginLoader {
         }
     }
 
-    removePlugin(pluginSlug) {
+    unregisterPlugin(pluginSlug) {
         let currentPlugins = this.getRegisteredPlugins();
 
         if (currentPlugins.includes(pluginSlug)) {
@@ -55,6 +59,8 @@ export class PluginLoader {
             alert(`Cannot remove plugin ${pluginSlug}: not found.`);
         }
     }
+
+    /* ------------------------------------------------------- */
 
     #network() {
         try {
@@ -99,10 +105,10 @@ export class PluginLoader {
         });
     }
 
+    /* ------------------------------------------------------- */
+
     load() {
         this.#network();
-
-        /* ------------------------------------------------------------------------------------ */
 
         for (const plugin of this.plugins) {
             plugin.preload();
