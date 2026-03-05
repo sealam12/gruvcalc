@@ -11,7 +11,13 @@ export class Modal {
 }
 
 export class ModalManager {
+    constructor() {
+        this.activeModal = undefined;
+    }
+
     showModal(modal) {
+        this.activeModal = modal;
+
         modalContent.html(modal.content);
         modalTitleText.text(modal.title);
 
@@ -23,6 +29,8 @@ export class ModalManager {
     }
     
     hideModal() {
+        this.activeModal = undefined;
+
         modalContainer.css("opacity", "0%");
 
         setTimeout(() => {
@@ -37,6 +45,6 @@ export class ModalManager {
     }
 
     isOpen() {
-        return modalContainer.css("display") === "flex";
+        return this.activeModal !== undefined;
     }
 }
