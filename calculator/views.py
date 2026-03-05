@@ -20,6 +20,6 @@ def plugin_fetch(request, slug):
     try:
         plugin = models.Plugin.objects.get(slug=slug)
     except Exception as e:
-        return JsonResponse({'error': f"Could not find the plugin {slug}", 'status_code': 404}, status=404)
+        return JsonResponse({'message': f"Could not find plugin {slug}"}, status=404)
     
     return HttpResponse(plugin.content, content_type="application/javascript")

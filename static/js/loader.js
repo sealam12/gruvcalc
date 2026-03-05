@@ -74,8 +74,10 @@ export class PluginLoader {
                         const pluginContent = await fetch(`/api/plugins/${pluginSlug}.js/`)
                                 .then(response => {
                                     if (!response.ok) {
-                                        alert(`Failed to fetch plugin ${pluginSlug}: ${response.message}`);
-                                        return "err";
+                                        return response.json().then(data => {
+                                            alert(`Failed to fetch plugin ${pluginSlug}: ${data.message}`);
+                                            return "err";
+                                        });
                                     }
 
                                     return response.text();
