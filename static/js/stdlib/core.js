@@ -16,6 +16,29 @@ function launchHelpModal() {
     ));
 }
 
+function launchPluginModal() {
+    window.gruvcalc.modal.showModal(new Modal(
+        "Gruvcalc Core - Plugins",
+        `
+            <h2 class="title">GruvCalc Plugins</h2>
+            <p>Here you can manage your plugins.</p>
+            <div class="block">
+                ${window.gruvcalc.plugins.getRegisteredPlugins().map(pluginSlug => {
+                    let plugin = window.gruvcalc.plugins.getPlugin(pluginSlug);
+                    
+                    return `
+                        <div class="item">
+                            <strong>${plugin.name}:</strong>
+                            ${plugin.description} 
+                            <button class="button" onclick="window.gruvcalc.plugins.unregisterPlugin('${plugin.slug}')">Remove</button>
+                        </div>
+                    `;
+                }).join("\n")}
+            </div>
+        `
+    ));
+}
+
 window.commands = {
     "clear": {
         evaluate: (...args) => { $("#output-container").html(""); },
@@ -58,9 +81,9 @@ export const corePlugin = new Plugin(
             (currentVal) => {
                 const args = currentVal.split(" ");
                 if (commands[args[0]]) {
-                    return {color: "var(--color-success)", content: commands[args[0]].description};
+                    return {active: false, color: "var(--color-success)", content: commands[args[0]].description};
                 } else {
-                    return {color: "var(--color-error)", content: "Couldn't find that command!"};
+                    return {active: false, color: "var(--color-error)", content: "Couldn't find that command!"};
                 }
             },
             (currentVal) => {
@@ -69,7 +92,7 @@ export const corePlugin = new Plugin(
                     window.gruvcalc.reset();
                     return commands[args[0]].evaluate(...args.slice(1));
                 } else {
-                    return {input: currentVal, color: "var(--color-error)", content: "Couldn't find that command!"};
+                    return {active: false, input: currentVal, color: "var(--color-error)", content: "Couldn't find that command!"};
                 }
             }
         ),
@@ -114,10 +137,6 @@ export const corePlugin = new Plugin(
 
     () => {
         window.gruvcalc.visual.createNavbarButton("Help", launchHelpModal);
-
-        window.gruvcalc.visual.createNavbarButton("Plugins", () => {
-            const pluginList = window.gruvcalc.plugins.plugins.map(plugin => `- ${plugin.name}: ${plugin.description}`).join("\n");
-            alert(`Loaded plugins:\n\n${pluginList}`);
-        });
+        window.gruvcalc.visual.createNavbarButton("Plugins", launchPluginModal);
     }
 )

@@ -24,6 +24,7 @@ export class VisualManager {
     updatePreview(previewResult) {
         outputPreview.text(previewResult.content);
         outputPreview.css("--PREVIEW-accent", previewResult.color);
+        outputPreview[0].className = previewResult.active ? "active" : "";
     }
 
     createOutput(evaluateResult) {
@@ -41,6 +42,7 @@ export class VisualManager {
         }
 
         newElement.css("--OUTPUT-ITEM-accent", evaluateResult.color);
+        newElement[0].className = evaluateResult.active ? "active" : "";
 
         outputContainer.prepend(newElement);
     }

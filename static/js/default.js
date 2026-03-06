@@ -11,5 +11,5 @@ export function evaluateDefault(currentVal) {
         color = "var(--color-error)";
     }
 
-    return { input: currentVal, content: evaluated, color: color};
+    return { input: currentVal, content: evaluated, color: color, active: false };
 }
