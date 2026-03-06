@@ -17,17 +17,29 @@ function launchHelpModal() {
 }
 
 function launchPluginModal() {
+    let plugins = window.gruvcalc.plugins.plugins;
+    
+    for (const pluginSlug of window.gruvcalc.plugins.getRegisteredPlugins()) {
+        if (plugins.includes(pluginSlug)) continue;
+
+        plugins.push({
+            slug: pluginSlug,
+            name: pluginSlug,
+            description: "Plugin could not be loaded or has not been loaded yet.",
+            
+            error: true
+        });
+    }
+
     window.gruvcalc.modal.showModal(new Modal(
         "Gruvcalc Core - Plugins",
         `
             <h2 class="title">GruvCalc Plugins</h2>
             <p>Here you can manage your plugins.</p>
             <div class="block">
-                ${window.gruvcalc.plugins.getRegisteredPlugins().map(pluginSlug => {
-                    let plugin = window.gruvcalc.plugins.getPlugin(pluginSlug);
-                    
+                ${plugins.map(plugin => {
                     return `
-                        <div class="item">
+                        <div class="item" style="--ITEM-accent: ${ plugin.hasOwnProperty("error") ? "var(--color-error)" : "var(--color-success)"};">
                             <strong>${plugin.name}:</strong>
                             ${plugin.description} 
                             <button class="button" onclick="window.gruvcalc.plugins.unregisterPlugin('${plugin.slug}')">Remove</button>
