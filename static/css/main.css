@@ -19,6 +19,7 @@
 
     --THEME-success: #8ec07c;
     --THEME-error: #cc241d;
+    --THEME-warning: #fabd2f;
 
     /* COLOR MAP */
 
@@ -32,6 +33,7 @@
 
     --color-error: var(--THEME-error);
     --color-success: var(--THEME-success);
+    --color-warning: var(--THEME-warning);
 
     --color-primary: var(--THEME-primary);
     --color-secondary: var(--THEME-secondary);

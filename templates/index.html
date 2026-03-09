@@ -10,7 +10,6 @@
         </script>
         
         <script src="/static/jquery.js"></script>
-        <script type="module" src="/static/js/main.js"></script>
     </head>
 
     <body>
@@ -61,7 +60,7 @@
             <script type="module">
                 import { Gruvcalc } from "/static/js/main.js";
                 window.gruvcalc = new Gruvcalc();
-                window.gruvcalc.load();
+                window.gruvcalc.init();
             </script>
         </div>
     </body>

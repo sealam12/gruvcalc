@@ -1,20 +1,25 @@
 export class Plugin {
-    constructor(slug, name, description, modes, preload, load) {
+    constructor(slug, name, description, modes, preinit, init) {
         this.slug = slug;
         this.name = name;
         this.description = description;
         this.modes = modes;
 
-        this.preloadFunc = preload;
-        this.loadFunc = load;
+        this.preinitFunc = preinit;
+        this.initFunc = init;
+
+        this.isInitialized = false;
     }
 
-    preload(api) {
-        if (this.preloadFunc) this.preloadFunc(api);
+    ///////////////////////////////////////////////////////
+
+    preinit(api) {
+        if (this.preinitFunc) this.preinitFunc(api);
     }
 
-    load(api) {
-        if (this.loadFunc) this.loadFunc(api);
+    init(api) {
+        if (this.initFunc) this.initFunc(api);
+        this.isInitialized = true;
     }
 
     ///////////////////////////////////////////////////////

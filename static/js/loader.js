@@ -4,120 +4,112 @@ import { corePlugin } from "./stdlib/core.js";
 
 export class PluginLoader {
     constructor() {
-        this.plugins = [corePlugin];
-        this.availablePlugins = [];
+        this.loadedPlugins = [corePlugin];
+        this.pluginRepository = [];
     }
 
-    /* ------------------------------------------------------- */
+    async loadPlugin(pluginSlug) {
+        const response = await fetch(`/api/plugins/${pluginSlug}.js/`);
+        const text = await response.text();
+        
+        const plugin = (() => {
+            let plugin;
+            try {
+                plugin = eval(text);
+            } catch(e) {
+                plugin = undefined;
+            }
 
-    getPlugin(pluginSlug) {
-        return this.plugins.find(plugin => plugin.slug == pluginSlug);
+            if (plugin instanceof Plugin) {
+                return plugin;
+            } else {
+                alert(`Plugin ${pluginSlug} did not return a valid plugin object!`);
+                return undefined;
+            }
+        })();
+        
+        if (plugin) {
+            this.loadedPlugins.push(plugin);
+        } else {
+            alert(`Failed to load plugin ${pluginSlug}!`);
+        }
+        
+        return plugin;
     }
-
-    getModes() {
-        return this.plugins.flatMap(plugin => plugin.modes);
-    }
-
-    /* ------------------------------------------------------- */
 
     getRegisteredPlugins() {
-        let fromLocalStorage;
+        let fromLocalStorage = localStorage.getItem("registeredPlugins") ? JSON.parse(localStorage.getItem("registeredPlugins")) : ["core"];
 
-        try {
-            fromLocalStorage = JSON.parse(localStorage.getItem("gruvcalc_plugins") || "[]");
-        } catch (e) {
-            alert(`Error parsing registered plugins from localStorage: ${e.message}`);
-            fromLocalStorage = [];
+        if (!fromLocalStorage.includes("core")) {
+            fromLocalStorage.push("core");
+            localStorage.setItem("registeredPlugins", JSON.stringify(fromLocalStorage));
         }
 
         return fromLocalStorage;
     }
 
     registerPlugin(pluginSlug) {
-        if (!this.availablePlugins.includes(pluginSlug)) {
-            alert(`Cannot add plugin ${pluginSlug}: does not exist.`);
-            return;
-        }
+        if (pluginSlug == "core") { alert("Cannot remove core plugin"); return; }
 
-        let currentPlugins = this.getRegisteredPlugins();
-
-        if (!currentPlugins.includes(pluginSlug)) {
-            currentPlugins.push(pluginSlug);
-            localStorage.setItem("gruvcalc_plugins", JSON.stringify(currentPlugins));
-        } else {
-            alert(`Cannot add plugin ${pluginSlug}: already added.`);
-        }
+        let registeredPlugins = this.getRegisteredPlugins();
+        if (registeredPlugins.includes(pluginSlug)) { return; }
+        
+        localStorage.setItem("registeredPlugins", JSON.stringify([...registeredPlugins, pluginSlug]));
     }
 
     unregisterPlugin(pluginSlug) {
-        let currentPlugins = this.getRegisteredPlugins();
+        if (pluginSlug == "core") { alert("Cannot remove core plugin"); return; }
 
-        if (currentPlugins.includes(pluginSlug)) {
-            currentPlugins = currentPlugins.filter(slug => slug !== pluginSlug);
-            localStorage.setItem("gruvcalc_plugins", JSON.stringify(currentPlugins));
-        } else {
-            alert(`Cannot remove plugin ${pluginSlug}: not found.`);
+        let registeredPlugins = this.getRegisteredPlugins();
+        if (!registeredPlugins.includes(pluginSlug)) { return; }
+        
+        localStorage.setItem("registeredPlugins", JSON.stringify(registeredPlugins.filter(slug => slug !== pluginSlug)));
+    }
+
+    isRegistered(pluginSlug) {
+        return this.getRegisteredPlugins().includes(pluginSlug);
+    }
+
+    installPlugin(pluginSlug) {
+        if (!this.isRegistered(pluginSlug)) return;
+
+        this.registerPlugin(pluginSlug);
+        this.loadPlugin(pluginSlug);
+    }
+
+    unregisterPlugin(pluginSlug) {}
+
+    async load() {
+        await (fetch("/api/plugins/")
+        .then(response => response.json())
+        .then(plugins => {
+            this.pluginRepository = plugins;
+        }));
+        
+        for (const pluginSlug of this.getRegisteredPlugins()) {
+            await this.loadPlugin(pluginSlug);
+        }
+        
+        return;
+    }
+
+    init() {
+        for (const plugin of this.loadedPlugins) {
+            plugin.preinit();
+        }
+
+        for (const plugin of this.loadedPlugins) {
+            plugin.init();
         }
     }
 
-    /* ------------------------------------------------------- */
-
-    #network() {
-        try {
-            fetch("/api/plugins/")
-                .then(response => response.json())
-                .then(plugins => {
-                    this.availablePlugins = plugins;
-                });
-        } catch (e) {
-            alert("Failed to fetch available plugins: " + e.message);
-        }
-
-        this.getRegisteredPlugins().forEach(async pluginSlug => {
-            try {
-                if (pluginSlug && pluginSlug != "core") {
-                    try {
-                        const pluginContent = await fetch(`/api/plugins/${pluginSlug}.js/`)
-                                .then(response => {
-                                    if (!response.ok) {
-                                        return response.json().then(data => {
-                                            alert(`Failed to fetch plugin ${pluginSlug}: ${data.message}`);
-                                            return "err";
-                                        });
-                                    }
-
-                                    return response.text();
-                                });
-                        
-                        if (pluginContent == "err") {
-                            return;
-                        }
-                        
-                        const plugin = eval(pluginContent);
-                        this.plugins.push(plugin);
-                    } catch (e) {
-                        alert(`Failed to load plugin ${pluginSlug}: ${e.message}`);
-                    }
-                }
-            } catch (e) {
-                alert(`Error fetching plugin ${pluginSlug}: ${e.message}`);
-            }
-        });
+    getPlugin(pluginSlug) {
+        return this.loadedPlugins.find(plugin => plugin.slug === pluginSlug);
     }
 
-    /* ------------------------------------------------------- */
-
-    load() {
-        this.#network();
-
-        for (const plugin of this.plugins) {
-            plugin.preload();
-        }
-
-        for (const plugin of this.plugins) {
-            plugin.load({
-                getPlugin: (slug) => this.getPlugin(slug),
-            });
-        }
+    getAllModes() {
+        return this.loadedPlugins
+            .filter(plugin => plugin.isInitialized)
+            .flatMap(plugin => plugin.modes);
     }
 }

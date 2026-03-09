@@ -17,29 +17,31 @@ function launchHelpModal() {
 }
 
 function launchPluginModal() {
-    let plugins = window.gruvcalc.plugins.plugins;
-    
-    for (const pluginSlug of window.gruvcalc.plugins.getRegisteredPlugins()) {
-        if (plugins.includes(pluginSlug)) continue;
+    let plugins = window.gruvcalc.plugins.loadedPlugins;
+    let plugin_list = [];
 
-        plugins.push({
-            slug: pluginSlug,
-            name: pluginSlug,
-            description: "Plugin could not be loaded or has not been loaded yet.",
-            
-            error: true
+    for (const plugin of plugins) {
+        const initialized = plugin.isInitialized;
+        const isRemoved = !window.gruvcalc.plugins.isRegistered(plugin.slug);
+
+        plugin_list.push({
+            slug: plugin.slug,
+            name: plugin.name,
+            description: plugin.description,
+        
+            color: isRemoved ? "var(--color-error)" : (initialized ? "var(--color-success)" : "var(--color-warning)"),
         });
     }
-
+    
     window.gruvcalc.modal.showModal(new Modal(
         "Gruvcalc Core - Plugins",
         `
             <h2 class="title">GruvCalc Plugins</h2>
             <p>Here you can manage your plugins.</p>
             <div class="block">
-                ${plugins.map(plugin => {
+                ${plugin_list.map(plugin => {
                     return `
-                        <div class="item" style="--ITEM-accent: ${ plugin.hasOwnProperty("error") ? "var(--color-error)" : "var(--color-success)"};">
+                        <div class="item" style="--ITEM-accent: ${ plugin.color };">
                             <strong>${plugin.name}:</strong>
                             ${plugin.description} 
                             <button class="button" onclick="window.gruvcalc.plugins.unregisterPlugin('${plugin.slug}')">Remove</button>
@@ -69,7 +71,7 @@ window.commands = {
 
     "addplugin": {
         evaluate: (slug) => {
-            window.gruvcalc.plugins.registerPlugin(slug);
+            window.gruvcalc.plugins.installPlugin(slug);
         },
         description: "Adds a plugin by slug. Usage: addplugin <slug>"
     },

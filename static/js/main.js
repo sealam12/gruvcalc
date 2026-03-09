@@ -17,15 +17,19 @@ export class Gruvcalc {
         this.currentMode = undefined;
     }
 
-    load() {
+    init() {
         this.modal.init();
-        this.plugins.load();
+        this.plugins.load().then(() => {
+            this.plugins.init();
 
-        this.defaultMode = this.plugins.getPlugin("core").getMode("normal");
-        this.switchMode(this.defaultMode);
-        
-        $(window).on("keydown", (event) => {
-            this.onKeydown(event);
+            this.defaultMode = this.plugins
+                .getPlugin("core")
+                .getMode("normal");
+            this.switchMode(this.defaultMode);
+            
+            $(window).on("keydown", (event) => {
+                this.onKeydown(event);
+            });
         });
     }
 
@@ -88,7 +92,7 @@ export class Gruvcalc {
 
         const previousValue = input.val();
 
-        for (const mode of this.plugins.getModes()) {
+        for (const mode of this.plugins.getAllModes()) {
             if (event.key === mode.hotkey) {
                 event.preventDefault();
                 this.switchMode(mode);

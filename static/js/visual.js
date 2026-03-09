@@ -42,7 +42,7 @@ export class VisualManager {
         }
 
         newElement.css("--OUTPUT-ITEM-accent", evaluateResult.color);
-        newElement[0].className = evaluateResult.active ? "active" : "";
+        newElement[0].className = "output-item" + (evaluateResult.active ? "active" : "");
 
         outputContainer.prepend(newElement);
     }
