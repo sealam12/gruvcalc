@@ -4,6 +4,7 @@ import { VisualManager } from "./visual.js";
 import { evaluateDefault } from "./default.js";
 
 import { ModalManager } from "./modal.js";
+import { Alert } from "./alert.js";
 
 const input = $("#input-box");
 
@@ -30,6 +31,7 @@ export class Gruvcalc {
             $(window).on("keydown", (event) => {
                 this.onKeydown(event);
             });
+
         });
     }
 

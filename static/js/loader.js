@@ -1,5 +1,8 @@
 import { Plugin } from "./plugin.js";
 import { Mode } from "./mode.js";
+import { Alert } from "./alert.js";
+import { Modal } from "./modal.js";
+
 import { corePlugin } from "./stdlib/core.js";
 
 export class PluginLoader {
@@ -9,32 +12,31 @@ export class PluginLoader {
     }
 
     async loadPlugin(pluginSlug) {
-        const response = await fetch(`/api/plugins/${pluginSlug}.js/`);
-        const text = await response.text();
-        
-        const plugin = (() => {
+        try {
+            const response = await fetch(`/api/plugins/${pluginSlug}.js/`);
+            if (response.status != 200) {
+                throw new Error((await response.json()).message || `Server returned ${response.status}`);
+            }
+
+            const text = await response.text();
+            
             let plugin;
             try {
                 plugin = eval(text);
             } catch(e) {
                 plugin = undefined;
             }
-
-            if (plugin instanceof Plugin) {
+    
+            if (!(plugin == undefined || plugin == null || !plugin) && plugin instanceof Plugin) {
+                this.loadedPlugins.push(plugin);
                 return plugin;
             } else {
-                alert(`Plugin ${pluginSlug} did not return a valid plugin object!`);
+                Alert.error("Error loading plugin", `Plugin ${pluginSlug} did not return a valid plugin object!`);
                 return undefined;
             }
-        })();
-        
-        if (plugin) {
-            this.loadedPlugins.push(plugin);
-        } else {
-            alert(`Failed to load plugin ${pluginSlug}!`);
+        } catch (e) {
+            Alert.error("Error loading plugin", `Failed to load ${pluginSlug}: ${e.message}`);
         }
-        
-        return plugin;
     }
 
     getRegisteredPlugins() {
@@ -71,24 +73,41 @@ export class PluginLoader {
     }
 
     installPlugin(pluginSlug) {
-        if (!this.isRegistered(pluginSlug)) return;
+        if (this.isRegistered(pluginSlug)) return;
 
-        this.registerPlugin(pluginSlug);
-        this.loadPlugin(pluginSlug);
+        Alert.info("Installing Plugin", `Installing plugin ${pluginSlug}...`);
+
+        this.loadPlugin(pluginSlug).then(plugin => {
+            if (plugin) {
+                this.registerPlugin(pluginSlug);
+            }
+        });
     }
 
-    unregisterPlugin(pluginSlug) {}
+    uninstallPlugin(pluginSlug) {
+        if (!this.isRegistered(pluginSlug)) return;  
+
+        Alert.info("Uninstalling Plugin", `Uninstalling plugin ${pluginSlug}...`);
+
+        this.unregisterPlugin(pluginSlug);
+        Alert.success("Plugin Uninstalled", `Successfully uninstalled plugin ${pluginSlug}! Refresh the page to apply changes.`);
+    }
 
     async load() {
-        await (fetch("/api/plugins/")
-        .then(response => response.json())
-        .then(plugins => {
-            this.pluginRepository = plugins;
-        }));
-        
+        Alert.info("Loading", "Loading plugins...");
+
+        fetch("/api/plugins/")
+            .then(response => response.json())
+            .then(plugins => {
+                this.pluginRepository = plugins;
+            });
+
         for (const pluginSlug of this.getRegisteredPlugins()) {
+            if (pluginSlug == "core") { continue; }
             await this.loadPlugin(pluginSlug);
         }
+
+        Alert.success("Finished Loading", "Finished loading plugins.");
         
         return;
     }

@@ -1,0 +1,50 @@
+#alert-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    z-index: 1000;
+}
+
+.alert {
+    padding: 5px 10px;
+    border-radius: 8px;
+
+    color: var(--color-fg);
+    background-color: var(--color-bg2);
+
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 20px;
+
+    transition: all 0.5s;
+
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(120%);
+
+    margin-left: auto;
+
+    width: fit-content;
+    display: inline-block;
+    max-width: 40vw;
+    flex-grow: 0;
+}
+
+.alert.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+}
+
+.alert > .alert-title {
+    font-weight: bold;
+    margin-bottom: 0;
+    font-size: 0.95em;
+}
+
+.alert > .alert-content {
+    padding: 5px 5px;
+}

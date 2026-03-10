@@ -38,7 +38,7 @@ function launchPluginModal() {
         `
             <h2 class="title">GruvCalc Plugins</h2>
             <p>Here you can manage your plugins.</p>
-            <div class="block">
+            <div class="block" style="display: flex; flex-direction: column; gap: 10px;">
                 ${plugin_list.map(plugin => {
                     return `
                         <div class="item" style="--ITEM-accent: ${ plugin.color };">
@@ -69,18 +69,18 @@ window.commands = {
         description: "Shows this help message"
     },
 
-    "addplugin": {
+    "install": {
         evaluate: (slug) => {
             window.gruvcalc.plugins.installPlugin(slug);
         },
-        description: "Adds a plugin by slug. Usage: addplugin <slug>"
+        description: "Installs a plugin by slug. Usage: install <slug>"
     },
 
-    "removeplugin": {
+    "uninstall": {
         evaluate: (slug) => {
-            window.gruvcalc.plugins.unregisterPlugin(slug);
+            window.gruvcalc.plugins.uninstallPlugin(slug);
         },
-        description: "Removes a plugin by slug. Usage: removeplugin <slug>"
+        description: "Uninstalls a plugin by slug. Usage: uninstall <slug>"
     }
 }
 

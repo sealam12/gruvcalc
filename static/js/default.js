@@ -1,3 +1,8 @@
+import { Plugin } from "./plugin.js";
+import { Mode } from "./mode.js";
+import { Alert } from "./alert.js";
+import { Modal } from "./modal.js";
+
 export function evaluateDefault(currentVal) {
     let evaluated;
     let color = "var(--color-primary)";
