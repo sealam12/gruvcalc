@@ -2,19 +2,7 @@ import { Plugin } from "../plugin.js";
 import { Mode } from "../mode.js";
 import { Modal } from "../modal.js";
 
-function launchHelpModal() {
-    window.gruvcalc.modal.showModal(new Modal(
-        "Gruvcalc Core - Help",
-        `
-            <h2 class="title">GruvCalc Help</h2>
-            <p class="subtitle">Welcome to GruvCalc!</p>
-            <p>You can also use the following commands:</p>
-            <ul>
-                ${Object.keys(commands).map(cmd => `<li><strong>${cmd}</strong>: ${commands[cmd].description}</li>`).join("\n")}
-            </ul>
-        `
-    ));
-}
+import { launchHelpModal } from "../default.js";
 
 function launchPluginModal() {
     let plugins = window.gruvcalc.plugins.loadedPlugins;
@@ -150,7 +138,6 @@ export const corePlugin = new Plugin(
     },
 
     () => {
-        window.gruvcalc.visual.createNavbarButton("Help", launchHelpModal);
         window.gruvcalc.visual.createNavbarButton("Plugins", launchPluginModal);
     }
 )

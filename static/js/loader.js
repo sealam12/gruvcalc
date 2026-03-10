@@ -79,6 +79,7 @@ export class PluginLoader {
 
         this.loadPlugin(pluginSlug).then(plugin => {
             if (plugin) {
+                Alert.success("Plugin Installed", `Successfully installed ${pluginSlug}! Refresh the page to apply changes.`);
                 this.registerPlugin(pluginSlug);
             }
         });

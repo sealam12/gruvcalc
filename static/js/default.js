@@ -18,3 +18,13 @@ export function evaluateDefault(currentVal) {
 
     return { input: currentVal, content: evaluated, color: color, active: false };
 }
+
+export function launchHelpModal() {
+    window.gruvcalc.modal.showModal(new Modal(
+        "Gruvcalc Core - Help",
+        `
+            <h2 class="title">GruvCalc Help</h2>
+            <p class="subtitle">Welcome to GruvCalc!</p>
+        `
+    ));
+}

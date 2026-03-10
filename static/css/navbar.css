@@ -11,6 +11,7 @@
 }
 
 .navbar-button {
+    box-sizing: border-box;
     background-color: var(--color-bg2);
     border: none;
     color: var(--color-fg);

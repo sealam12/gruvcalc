@@ -25,7 +25,9 @@
             <div id="alert-container"></div>
 
             <!-- navbar -->
-            <div id="navbar-container"></div>
+            <div id="navbar-container">
+                <button class="navbar-button" id="NAVBAR-HELP-BUTTON">Help</button>
+            </div>
             
             <!-- input box -->
             <div id="input-container">
@@ -70,6 +72,9 @@
                 import { Gruvcalc } from "/static/js/main.js";
                 window.gruvcalc = new Gruvcalc();
                 window.gruvcalc.init();
+
+                import { launchHelpModal } from "/static/js/default.js";
+                $("#NAVBAR-HELP-BUTTON").on("click", launchHelpModal);
             </script>
         </div>
     </body>

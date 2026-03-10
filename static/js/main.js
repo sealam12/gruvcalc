@@ -1,7 +1,7 @@
 import { PluginLoader } from "./loader.js";
 import { VisualManager } from "./visual.js";
 
-import { evaluateDefault } from "./default.js";
+import { evaluateDefault, launchHelpModal } from "./default.js";
 
 import { ModalManager } from "./modal.js";
 import { Alert } from "./alert.js";
@@ -20,6 +20,7 @@ export class Gruvcalc {
 
     init() {
         this.modal.init();
+
         this.plugins.load().then(() => {
             this.plugins.init();
 
