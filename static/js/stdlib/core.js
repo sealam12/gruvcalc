@@ -32,7 +32,7 @@ function launchPluginModal() {
                         <div class="item" style="--ITEM-accent: ${ plugin.color };">
                             <strong>${plugin.name}:</strong>
                             ${plugin.description} 
-                            <button class="button" onclick="window.gruvcalc.plugins.unregisterPlugin('${plugin.slug}')">Remove</button>
+                            <button class="button" onclick="window.gruvcalc.plugins.uninstallPlugin('${plugin.slug}')">Remove</button>
                         </div>
                     `;
                 }).join("\n")}
@@ -64,7 +64,7 @@ window.commands = {
         description: "Installs a plugin by slug. Usage: install <slug>"
     },
 
-    "uninstall": {
+    "remove": {
         evaluate: (slug) => {
             window.gruvcalc.plugins.uninstallPlugin(slug);
         },

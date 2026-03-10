@@ -60,7 +60,7 @@ export class PluginLoader {
     }
 
     unregisterPlugin(pluginSlug) {
-        if (pluginSlug == "core") { alert("Cannot remove core plugin"); return; }
+        if (pluginSlug == "core") { throw new Error("Cannot remove core plugin"); }
 
         let registeredPlugins = this.getRegisteredPlugins();
         if (!registeredPlugins.includes(pluginSlug)) { return; }
@@ -90,8 +90,12 @@ export class PluginLoader {
 
         Alert.info("Uninstalling Plugin", `Uninstalling plugin ${pluginSlug}...`);
 
-        this.unregisterPlugin(pluginSlug);
-        Alert.success("Plugin Uninstalled", `Successfully uninstalled plugin ${pluginSlug}! Refresh the page to apply changes.`);
+        try {
+            this.unregisterPlugin(pluginSlug);
+            Alert.success("Plugin Uninstalled", `Successfully uninstalled plugin ${pluginSlug}! Refresh the page to apply changes.`);
+        } catch (e) {
+            Alert.error("Error Uninstalling Plugin", `Failed to uninstall ${pluginSlug}: ${e.message}`);
+        }
     }
 
     async load() {
