@@ -63,7 +63,7 @@ function launchPluginModal() {
             <div class="block" style="display: flex; flex-direction: column; gap: 10px; max-height: 50%; overflow: scroll;">
                 ${pluginRepo.map(pluginSlug => {
                     return `
-                        <div class="item" style="--ITEM-accent: var(--color-bg2);">
+                        <div class="item" style="--ITEM-accent: var(--color-primary);">
                             <strong>${pluginSlug}:</strong>
                             <button class="button" onclick="window.gruvcalc.plugins.installPlugin('${pluginSlug}')">Install</button>
                         </div>
