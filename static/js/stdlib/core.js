@@ -136,8 +136,6 @@ export const corePlugin = new Plugin(
                 }
             }
         ),
-    
-        new Mode("insert", "@", undefined, "var(--color-success)")
     ],
     () => {
         window.factorial = (n) => {
