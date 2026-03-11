@@ -20,19 +20,52 @@ function launchPluginModal() {
             color: isRemoved ? "var(--color-error)" : (initialized ? "var(--color-success)" : "var(--color-warning)"),
         });
     }
+
+    for (const pluginSlug of window.gruvcalc.plugins.getRegisteredPlugins()) {
+        if (!plugins.find(p => p.slug === pluginSlug)) {
+            plugin_list.push({
+                slug: pluginSlug,
+                name: pluginSlug,
+                description: "Failed to load plugin!",
+                color: "var(--color-error)"
+            });
+        }
+    }
+    
+    let pluginRepo = [];
+    // only plugins that arent installed
+    for (const pluginSlug of window.gruvcalc.plugins.pluginRepository) {
+        if (window.gruvcalc.plugins.isRegistered(pluginSlug)) continue;
+
+        pluginRepo.push(pluginSlug);
+    }
     
     window.gruvcalc.modal.showModal(new Modal(
         "Gruvcalc Core - Plugins",
         `
             <h2 class="title">GruvCalc Plugins</h2>
             <p>Here you can manage your plugins.</p>
-            <div class="block" style="display: flex; flex-direction: column; gap: 10px;">
+
+            <h4 style="margin-bottom: 5px;">Manage Plugins</h4>
+            <div class="block" style="display: flex; flex-direction: column; gap: 10px; max-height: 50%; overflow: scroll;">
                 ${plugin_list.map(plugin => {
                     return `
                         <div class="item" style="--ITEM-accent: ${ plugin.color };">
                             <strong>${plugin.name}:</strong>
                             ${plugin.description} 
                             <button class="button" onclick="window.gruvcalc.plugins.uninstallPlugin('${plugin.slug}')">Remove</button>
+                        </div>
+                    `;
+                }).join("\n")}
+            </div>
+
+            <h4 style="margin-bottom: 5px;">Install Plugins</h4>
+            <div class="block" style="display: flex; flex-direction: column; gap: 10px; max-height: 50%; overflow: scroll;">
+                ${pluginRepo.map(pluginSlug => {
+                    return `
+                        <div class="item" style="--ITEM-accent: var(--color-bg2);">
+                            <strong>${pluginSlug}:</strong>
+                            <button class="button" onclick="window.gruvcalc.plugins.installPlugin('${pluginSlug}')">Install</button>
                         </div>
                     `;
                 }).join("\n")}
@@ -55,6 +88,11 @@ window.commands = {
     "help": {
         evaluate: launchHelpModal,
         description: "Shows this help message"
+    },
+
+    "plugins": {
+        evaluate: launchPluginModal,
+        description: "Opens the plugin management modal"
     },
 
     "install": {
@@ -102,11 +140,31 @@ export const corePlugin = new Plugin(
         new Mode("insert", "@", undefined, "var(--color-success)")
     ],
     () => {
-        window.factorial = (n) => { return n <= 1 ? 1 : n * factorial(n - 1); }
-        window.termial = (n) => { return n <= 1 ? 1 : n + termial(n - 1); }
+        window.factorial = (n) => {
+            let num = n;
+            let current = n;
+            while (current > 1) {
+                num *= current - 1;
+                current--;
+            }
+            return num;
+        }
+
+        window.termial = (n) => {
+            let num = n;
+            let current = n;
+            while (current > 1) {
+                num += current - 1;
+                current--;
+            }
+            return num;
+        }
 
         window.sum = (...args) => args.reduce((a, b) => a + b, 0);
         window.product = (...args) => args.reduce((a, b) => a * b, 1);
+
+        window.sqrt = (x) => Math.sqrt(x);
+        window.cbrt = (x) => Math.cbrt(x);
         
         // statistics functions
 
